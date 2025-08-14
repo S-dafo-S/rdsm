@@ -93,7 +93,7 @@ public class DssProgramExecutionServiceImpl implements DssProgramExecutionServic
 
          try {
             dssProgram.dnodeExecute(request, response);
-         } catch (NotImplementedException var12) {
+         } catch (NotImplementedException notImplemented) {
             throw new DssExecuteNotImplemented("Method dnodeExecute not implemented for program " + programName);
          }
 
@@ -115,7 +115,7 @@ public class DssProgramExecutionServiceImpl implements DssProgramExecutionServic
 
          try {
             Files.delete(jar);
-         } catch (NoSuchFileException var6) {
+         } catch (NoSuchFileException e) {
             LOG.info("Program file not found for query {} while replacing", queryName);
          } catch (IOException e) {
             LOG.error("Failed to delete jar lib {}", jar.getFileName(), e);
