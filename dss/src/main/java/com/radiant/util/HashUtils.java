@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.HexFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ public class HashUtils {
       try {
          MessageDigest digest = MessageDigest.getInstance("SHA-256");
          byte[] encodedhash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
-         return bytesToHex(encodedhash);
+         return HexFormat.of().formatHex(encodedhash);
       } catch (NoSuchAlgorithmException var3) {
          LOG.error("Failed to initialize hasher, unknown algorithm");
          throw new IllegalStateException("Unknown hash algorithm");
@@ -28,26 +29,11 @@ public class HashUtils {
          Mac mac = Mac.getInstance(algorithm);
          SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), algorithm);
          mac.init(secretKeySpec);
-         return bytesToHex(mac.doFinal(data.getBytes(StandardCharsets.UTF_8)));
+         return HexFormat.of().formatHex(mac.doFinal(data.getBytes(StandardCharsets.UTF_8)));
       } catch (InvalidKeyException | NoSuchAlgorithmException e) {
          LOG.error("Failed to init hmac", e);
          throw new IllegalStateException("Unknown hmac algorithm");
       }
    }
 
-   private static String bytesToHex(byte[] hash) {
-      StringBuilder hexString = new StringBuilder(2 * hash.length);
-
-      for(byte b : hash) {
-         int magicInt = 255;
-         String hex = Integer.toHexString(255 & b);
-         if (hex.length() == 1) {
-            hexString.append('0');
-         }
-
-         hexString.append(hex);
-      }
-
-      return hexString.toString();
-   }
 }
