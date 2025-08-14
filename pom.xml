@@ -33,8 +33,23 @@
         <liquibase.version>4.4.3</liquibase.version>
         <postgresql.version>42.2.20</postgresql.version>
         <spring.version>5.3.13</spring.version>
+
+        <!-- vendor JAR coordinates (TODO: 替换为你的实际坐标与文件名) -->
+        <vendor.groupId>com.example.vendor</vendor.groupId>
+        <vendor.artifactId>foo-lib</vendor.artifactId>
+        <vendor.version>1.0.0</vendor.version>
+        <vendor.jarPath>${project.basedir}/lib/foo-lib-1.0.0.jar</vendor.jarPath>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${vendor.groupId}</groupId>
+                <artifactId>${vendor.artifactId}</artifactId>
+                <version>${vendor.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
@@ -118,6 +133,27 @@
                         <version>2.0.1.Final</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>install-vendor-jar</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${vendor.jarPath}</file>
+                            <groupId>${vendor.groupId}</groupId>
+                            <artifactId>${vendor.artifactId}</artifactId>
+                            <version>${vendor.version}</version>
+                            <packaging>jar</packaging>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
