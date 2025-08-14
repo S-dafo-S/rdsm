@@ -83,9 +83,9 @@ public class FileAccessServiceImpl implements FileAccessService, PeriodicActivit
       FileAccessPath tempFilesPath = this.fileAccessPathService.findByLogicalPath(Paths.get("temp"));
       File tempFolder = new File(tempFilesPath.getPhysicalPath());
       if (tempFolder.isDirectory() && tempFolder.exists() && FileUtils.sizeOfDirectory(tempFolder) > 10737418240L) {
-         File[] tmpFiles = tempFolder.listFiles();
-         if (tmpFiles != null) {
-            List<File> files = (List)Arrays.stream(tmpFiles).sorted(Comparator.comparing(File::lastModified)).collect(Collectors.toList());
+         File[] tempFiles = tempFolder.listFiles();
+         if (tempFiles != null) {
+            List<File> files = (List)Arrays.stream(tempFiles).sorted(Comparator.comparing(File::lastModified)).collect(Collectors.toList());
             long minLifetimeLimit = System.currentTimeMillis() - 600000L;
 
             for(File file : files) {

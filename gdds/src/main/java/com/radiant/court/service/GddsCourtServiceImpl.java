@@ -311,9 +311,9 @@ public class GddsCourtServiceImpl implements GddsCourtService {
          if (versionGreater != null) {
             jpVersion = dateFormat.parse(versionGreater);
          }
-      } catch (ParseException var8) {
-         throw new RuntimeException("Failed to parse court list version");
-      }
+        } catch (ParseException e) {
+           throw new RuntimeException("Failed to parse court list version");
+        }
 
       if (jpVersion != null && jpVersion.after(courtListVersion)) {
          throw new CourtVersionException(versionGreater);

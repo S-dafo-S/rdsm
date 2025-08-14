@@ -51,9 +51,9 @@ public class GddsQueryExecutionServiceImpl implements GddsQueryExecutionService 
    @Autowired
    private ServiceLogManagementService serviceLogManagementService;
 
-   public String execute(Long id, String queryName, Map<String, String> params, HttpServletRequest request, Boolean isDssId) {
-      String var13;
-      try {
+     public String execute(Long id, String queryName, Map<String, String> params, HttpServletRequest request, Boolean isDssId) {
+        String responseBody;
+        try {
          this.applicationRegistryService.validateApiAccess(request, queryName);
          Long courtId;
          DNode targetDNode;
@@ -86,11 +86,11 @@ public class GddsQueryExecutionServiceImpl implements GddsQueryExecutionService 
             }
 
             ResponseEntity<String> response = (ResponseEntity)TransactionUtils.doWithCheckForUndesirableActiveTransaction(() -> this.restTemplate.exchange(url, HttpMethod.GET, new HttpEntity(headers), String.class), (Logger)null, "query execution");
-            String result = (String)response.getBody();
-            this.accessLogService.logSuccess(result != null ? result.length() : null, (ExternalProgramBody)null);
-            this.dnodeAccessLogService.log(targetDNode, url.toString(), true, (String)null);
-            this.serviceLogManagementService.log(LogLevel.INFO, (String)null, HttpStatus.OK.value(), result != null ? result.length() : null);
-            var13 = result;
+              String result = (String)response.getBody();
+              this.accessLogService.logSuccess(result != null ? result.length() : null, (ExternalProgramBody)null);
+              this.dnodeAccessLogService.log(targetDNode, url.toString(), true, (String)null);
+              this.serviceLogManagementService.log(LogLevel.INFO, (String)null, HttpStatus.OK.value(), result != null ? result.length() : null);
+              responseBody = result;
          } catch (ResourceAccessException exc) {
             this.dnodeAccessLogService.log(targetDNode, url.toString(), false, exc.getMessage());
             throw new DSSConnectionException(targetDNode.getName(), targetDNode.getDnodeUrl());
@@ -98,12 +98,12 @@ public class GddsQueryExecutionServiceImpl implements GddsQueryExecutionService 
             this.dnodeAccessLogService.log(targetDNode, url.toString(), false, e.getMessage());
             throw e;
          }
-      } finally {
-         this.accessKeyAuthenticationService.updateResponseTime(request.getHeader("Authorization"));
-      }
+        } finally {
+           this.accessKeyAuthenticationService.updateResponseTime(request.getHeader("Authorization"));
+        }
 
-      return var13;
-   }
+        return responseBody;
+     }
 
    private URI constructUri(Long courtId, DNode dnode, String queryName, Map<String, String> params) {
       String url = dnode.getDnodeUrl() + "/api/v1/query/" + courtId + "/" + queryName;

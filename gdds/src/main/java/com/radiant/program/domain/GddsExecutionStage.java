@@ -15,10 +15,10 @@ public class GddsExecutionStage extends ProgramStage {
    }
 
    void handleRequest(ProgramRequest request, ProgramResponse response, HttpServletRequest originalRequest) {
-      try {
-         this.gddsProgram.qnodeExecute(request, response);
-      } catch (NotImplementedException var5) {
-         throw new GddsExecuteNotImplemented("Method qnodeExecute not implemented for program class " + this.gddsProgram.getClass().getSimpleName());
-      }
+        try {
+           this.gddsProgram.qnodeExecute(request, response);
+        } catch (NotImplementedException e) {
+           throw new GddsExecuteNotImplemented("Method qnodeExecute not implemented for program class " + this.gddsProgram.getClass().getSimpleName());
+        }
    }
 }

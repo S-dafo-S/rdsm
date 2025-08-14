@@ -118,12 +118,12 @@ public class IntegrationFunctionServiceImpl implements IntegrationFunctionServic
          } else if (intFunction.getUploadedFilename() != null) {
             Path jarPath = Paths.get(this.fullPathProgramFile(intFunction.getUploadedFilename()));
 
-            try {
-               entries = this.validateJarContent(intFunction, Files.readAllBytes(jarPath));
-            } catch (NoSuchFileException var10) {
-               this.serviceLogManagementService.error("File " + intFunction.getUploadedFilename() + " not found");
-               throw new IntegrationFunctionProgramNotFound(intFunction.getOriginalFilename(), intFunction.getUploadedFilename());
-            }
+              try {
+                 entries = this.validateJarContent(intFunction, Files.readAllBytes(jarPath));
+              } catch (NoSuchFileException e) {
+                 this.serviceLogManagementService.error("File " + intFunction.getUploadedFilename() + " not found");
+                 throw new IntegrationFunctionProgramNotFound(intFunction.getOriginalFilename(), intFunction.getUploadedFilename());
+              }
          }
 
          this.updateRegistry(intFunction, entries);
@@ -246,11 +246,11 @@ public class IntegrationFunctionServiceImpl implements IntegrationFunctionServic
                ((URLClassLoader)cl).close();
                Path previousFilePath = Paths.get(this.fullPathProgramFile(filename));
 
-               try {
-                  Files.delete(previousFilePath);
-               } catch (NoSuchFileException var6) {
-                  LOG.warn("File not found for integration function {} while replacing", intFunction.getName());
-               }
+                 try {
+                    Files.delete(previousFilePath);
+                 } catch (NoSuchFileException e) {
+                    LOG.warn("File not found for integration function {} while replacing", intFunction.getName());
+                 }
             }
          } catch (IOException e) {
             this.serviceLogManagementService.error("Failed to remove file for integration function " + intFunction.getName());

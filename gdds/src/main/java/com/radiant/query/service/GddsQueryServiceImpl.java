@@ -157,13 +157,13 @@ public class GddsQueryServiceImpl implements GddsQueryService, PeriodicActivity 
          LOG.trace("Reading program file for query {}", queryDetails.getName());
          File jar = new File(this.fullPathProgramFile(queryDetails.getProgramJarName()));
 
-         try {
-            FileInputStream in = new FileInputStream(jar);
-            InputStreamResource is = new InputStreamResource(in);
-            result.set("file", is);
-         } catch (FileNotFoundException var9) {
-            LOG.warn("Program jar {} not found for query {}", queryDetails.getProgramJarName(), queryDetails.getName());
-         }
+           try {
+              FileInputStream in = new FileInputStream(jar);
+              InputStreamResource is = new InputStreamResource(in);
+              result.set("file", is);
+           } catch (FileNotFoundException e) {
+              LOG.warn("Program jar {} not found for query {}", queryDetails.getProgramJarName(), queryDetails.getName());
+           }
       }
 
       return result;
@@ -191,12 +191,12 @@ public class GddsQueryServiceImpl implements GddsQueryService, PeriodicActivity 
          } else {
             Path jarPath = Paths.get(this.fullPathProgramFile(target.getProgramJarName()));
 
-            try {
-               programJarEntry = this.validateProgramJarContent(target, Files.readAllBytes(jarPath));
-            } catch (NoSuchFileException var15) {
-               this.serviceLogService.error("Registered program file " + updateRequest.getProgramJarName() + " not found");
-               throw new ProgramFileNotFoundException(target.getProgramJarName(), ProgramNotFoundMessageCode.PROGRAM_FILE_NOT_FOUND_ON_QNODE);
-            }
+              try {
+                 programJarEntry = this.validateProgramJarContent(target, Files.readAllBytes(jarPath));
+              } catch (NoSuchFileException e) {
+                 this.serviceLogService.error("Registered program file " + updateRequest.getProgramJarName() + " not found");
+                 throw new ProgramFileNotFoundException(target.getProgramJarName(), ProgramNotFoundMessageCode.PROGRAM_FILE_NOT_FOUND_ON_QNODE);
+              }
          }
 
          this.updateIntegrationTypes(target, programJarEntry.getIntegrationTypes());
@@ -319,11 +319,11 @@ public class GddsQueryServiceImpl implements GddsQueryService, PeriodicActivity 
          ResponseEntity.BodyBuilder response = ((ResponseEntity.BodyBuilder)ResponseEntity.ok().headers(headers)).contentType(mediaType);
          File file = new File(this.fullDocFilePath(query.getUploadedDocFileName(), query.getId()));
 
-         try {
-            return response.body(new InputStreamResource(new FileInputStream(file)));
-         } catch (FileNotFoundException var10) {
-            throw new RuntimeException("Doc file not found for query " + query.getName());
-         }
+           try {
+              return response.body(new InputStreamResource(new FileInputStream(file)));
+           } catch (FileNotFoundException e) {
+              throw new RuntimeException("Doc file not found for query " + query.getName());
+           }
       } else {
          return null;
       }
@@ -350,11 +350,11 @@ public class GddsQueryServiceImpl implements GddsQueryService, PeriodicActivity 
          ResponseEntity.BodyBuilder response = ((ResponseEntity.BodyBuilder)ResponseEntity.ok().headers(headers)).contentType(mediaType);
          File file = new File(this.fullSampleCodeFilePath(query.getUploadedSampleCodeFileName(), query.getId()));
 
-         try {
-            return response.body(new InputStreamResource(new FileInputStream(file)));
-         } catch (FileNotFoundException var10) {
-            throw new RuntimeException("Sample code file not found for query " + query.getName());
-         }
+           try {
+              return response.body(new InputStreamResource(new FileInputStream(file)));
+           } catch (FileNotFoundException e) {
+              throw new RuntimeException("Sample code file not found for query " + query.getName());
+           }
       } else {
          return null;
       }
@@ -444,11 +444,11 @@ public class GddsQueryServiceImpl implements GddsQueryService, PeriodicActivity 
          if (previousFilename != null) {
             Path docPath = Paths.get(this.fullDocFilePath(previousFilename, query.getId()));
 
-            try {
-               Files.delete(docPath);
-            } catch (NoSuchFileException var9) {
-               LOG.warn("Doc file not found for query {} while replacing", query.getName());
-            }
+              try {
+                 Files.delete(docPath);
+              } catch (NoSuchFileException e) {
+                 LOG.warn("Doc file not found for query {} while replacing", query.getName());
+              }
          }
 
          if (newFilename != null) {
@@ -478,11 +478,11 @@ public class GddsQueryServiceImpl implements GddsQueryService, PeriodicActivity 
          if (previousFilename != null) {
             Path sampleCodePath = Paths.get(this.fullSampleCodeFilePath(previousFilename, query.getId()));
 
-            try {
-               Files.delete(sampleCodePath);
-            } catch (NoSuchFileException var9) {
-               LOG.warn("Sample code file not found for query {} while replacing", query.getName());
-            }
+              try {
+                 Files.delete(sampleCodePath);
+              } catch (NoSuchFileException e) {
+                 LOG.warn("Sample code file not found for query {} while replacing", query.getName());
+              }
          }
 
          if (newFilename != null) {

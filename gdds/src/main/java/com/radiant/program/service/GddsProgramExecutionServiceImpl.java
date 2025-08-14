@@ -134,13 +134,13 @@ public class GddsProgramExecutionServiceImpl implements GddsProgramExecutionServ
          ((URLClassLoader)cl).close();
          Path jar = Paths.get(jarToUnload);
 
-         try {
-            Files.delete(jar);
-         } catch (NoSuchFileException var7) {
-            LOG.info("Program file not found for query {} while replacing", queryName);
-         } catch (IOException e) {
-            LOG.error("Failed to delete jar lib {}", jar.getFileName(), e);
-         }
+           try {
+              Files.delete(jar);
+           } catch (NoSuchFileException e) {
+              LOG.info("Program file not found for query {} while replacing", queryName);
+           } catch (IOException e) {
+              LOG.error("Failed to delete jar lib {}", jar.getFileName(), e);
+           }
 
          EchoURLClassLoader loader = (EchoURLClassLoader)AccessController.doPrivileged(() -> new EchoURLClassLoader(new URL[0], Thread.currentThread().getContextClassLoader()));
          String devLibDir = System.getenv("GDDS_LIB_DIR");

@@ -170,7 +170,7 @@ public class QueryExecutionServiceImpl implements QueryExecutionService {
             JSONArray resultArray;
             try {
                resultArray = new JSONArray(queryResult);
-            } catch (JSONException var14) {
+            } catch (JSONException e) {
                throw new PaginationIsNotAvailableException();
             }
 
@@ -204,13 +204,13 @@ public class QueryExecutionServiceImpl implements QueryExecutionService {
    private String wrapPlainString(String input) {
       try {
          new JSONObject(input);
-      } catch (JSONException var7) {
+      } catch (JSONException objectException) {
          try {
             new JSONArray(input);
-         } catch (JSONException var6) {
+         } catch (JSONException arrayException) {
             try {
                return (new ObjectMapper()).writeValueAsString(new StringValue(input));
-            } catch (JsonProcessingException var5) {
+            } catch (JsonProcessingException processingException) {
                throw new RuntimeException("Failed to read query result");
             }
          }

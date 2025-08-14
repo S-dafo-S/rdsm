@@ -26,7 +26,7 @@ public final class LocalFileUtils {
          try {
             LOG.info("Starting read local file {} with length {}", path, file.length());
             return new SizedInputStream(new FileInputStream(file), file.length());
-         } catch (FileNotFoundException var5) {
+         } catch (FileNotFoundException e) {
             throw new NoSuchFileException(path, connector.toString(), fileAccessPath.toString());
          }
       } else {
