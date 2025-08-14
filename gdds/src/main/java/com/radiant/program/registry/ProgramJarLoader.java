@@ -57,17 +57,17 @@ public class ProgramJarLoader extends JarContentLoader {
    }
 
    private RdsmProgram findEchoProgramAnnotation(Set<? extends Class<?>> klasses) {
-      Stream var10000 = klasses.stream();
+      Stream<Class<?>> classesStream = klasses.stream();
       QnodeProgramAdapter.class.getClass();
-      Optional<? extends Class<?>> gddsAnnotatedClass = var10000.filter(QnodeProgramAdapter.class::isAssignableFrom).findAny();
+      Optional<? extends Class<?>> gddsAnnotatedClass = classesStream.filter(QnodeProgramAdapter.class::isAssignableFrom).findAny();
       if (gddsAnnotatedClass.isPresent()) {
          RdsmProgram annotation = (RdsmProgram)((Class)gddsAnnotatedClass.get()).getAnnotation(RdsmProgram.class);
          LOG.trace("Echo program annotation detected {}", annotation);
          return annotation;
       } else {
-         var10000 = klasses.stream();
+         classesStream = klasses.stream();
          DnodeProgramAdapter.class.getClass();
-         Optional<? extends Class<?>> dssAnnotatedClass = var10000.filter(DnodeProgramAdapter.class::isAssignableFrom).findAny();
+         Optional<? extends Class<?>> dssAnnotatedClass = classesStream.filter(DnodeProgramAdapter.class::isAssignableFrom).findAny();
          if (dssAnnotatedClass.isPresent()) {
             RdsmProgram annotation = (RdsmProgram)((Class)dssAnnotatedClass.get()).getAnnotation(RdsmProgram.class);
             LOG.trace("Echo program annotation detected {}", annotation);
