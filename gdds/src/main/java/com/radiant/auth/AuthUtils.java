@@ -8,9 +8,25 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 public class AuthUtils {
-   public static Boolean isRequesterIpValid(ApplicationRegistry app, String ipAddress) {
+   public static boolean isRequesterIpValid(ApplicationRegistry app, String ipAddress) {
       if (app.getIpAddresses() != null && !app.getIpAddresses().isEmpty()) {
-         return StringUtils.isEmpty(ipAddress) ? false : ((List)app.getIpAddresses().stream().map(IpAddress::getAddress).collect(Collectors.toList())).containsAll(Arrays.asList(ipAddress.replace(" ", "").split(",")));
+         // collect IP addresses allowed for the application
+         List<String> allowedIps = app.getIpAddresses().stream()
+            .map(IpAddress::getAddress)
+            .collect(Collectors.toList());
+
+         // ensure requester IP address is provided
+         if (StringUtils.isNotBlank(ipAddress)) {
+            // split provided IP addresses and validate each against allowed list
+            for (String requestIp : Arrays.asList(ipAddress.replace(" ", "").split(","))) {
+               if (!allowedIps.contains(requestIp)) {
+                  return false; // found IP not in allowed list
+               }
+            }
+            return true; // all requested IPs are allowed
+         }
+
+         return false; // requester IP not provided
       } else {
          return true;
       }
