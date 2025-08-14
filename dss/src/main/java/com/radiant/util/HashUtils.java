@@ -18,9 +18,9 @@ public class HashUtils {
          MessageDigest digest = MessageDigest.getInstance("SHA-256");
          byte[] encodedhash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
          return HexFormat.of().formatHex(encodedhash);
-      } catch (NoSuchAlgorithmException var3) {
-         LOG.error("Failed to initialize hasher, unknown algorithm");
-         throw new IllegalStateException("Unknown hash algorithm");
+        } catch (NoSuchAlgorithmException e) {
+            LOG.error("Failed to initialize hasher, unknown algorithm");
+            throw new IllegalStateException("Unknown hash algorithm");
       }
    }
 

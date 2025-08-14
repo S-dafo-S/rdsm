@@ -131,13 +131,13 @@ public class DbAccessServiceImpl implements DbAccessService {
                for(String directory : directories) {
                   for(String driverJar : driverJars) {
                      File file = new File(directory, driverJar);
-                     if (file.exists()) {
-                        try {
-                           classPath.add(file.toURI().toURL());
-                        } catch (MalformedURLException var21) {
-                           LOG.error("Bad JDBC driver file {}", file);
-                        }
-                     }
+                       if (file.exists()) {
+                          try {
+                             classPath.add(file.toURI().toURL());
+                          } catch (MalformedURLException e) {
+                             LOG.error("Bad JDBC driver file {}", file);
+                          }
+                       }
                   }
                }
 

@@ -60,11 +60,11 @@ public class ReleaseInfoServiceImpl implements ReleaseInfoService, ReleaseInfoEv
       return "http://172.17.0.1:80/media/releases";
    }
 
-   public ReleaseCompatibilityResponseDto isCompatible(String dssVersion) {
-      Stream var10002 = this.GDDSReleaseInfo.getCompatibleDssVersions().stream();
-      dssVersion.getClass();
-      return new ReleaseCompatibilityResponseDto(var10002.anyMatch(dssVersion::equals), this.GDDSReleaseInfo);
-   }
+     public ReleaseCompatibilityResponseDto isCompatible(String dssVersion) {
+        boolean isCompatible = this.GDDSReleaseInfo.getCompatibleDssVersions().stream()
+            .anyMatch(dssVersion::equals);
+        return new ReleaseCompatibilityResponseDto(isCompatible, this.GDDSReleaseInfo);
+     }
 
    public List<String> getCompatibleDssVersions() {
       return this.GDDSReleaseInfo.getCompatibleDssVersions();

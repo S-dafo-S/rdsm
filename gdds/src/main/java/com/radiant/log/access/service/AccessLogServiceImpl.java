@@ -17,6 +17,7 @@ import io.jsonwebtoken.SignatureException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -116,75 +117,34 @@ public class AccessLogServiceImpl implements AccessLogService, PeriodicActivity 
    public void downloadLogs(OutputStream outputStream, @Nullable Long startDate, @Nullable Long endDate, @Nullable String appId, @Nullable String sysId, @Nullable String clientIp, @Nullable String username, @Nullable String userId, @Nullable String path, @Nullable Integer response, @Nullable Integer duration) {
       LOG.info("Start retrieving access logs...");
 
-      try {
-         Appendable out = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
-         CSVFormat format = Builder.create(CSVFormat.DEFAULT).setHeader(new String[]{"app_id", "b_sys_id", "service_ip", "service_port", "service_path", "client_ip", "user_name", "user_id", "sc_request_id", "query_body", "query_params", "read_file_name", "error_message", "start_time", "end_time", "duration", "response_code", "response_length"}).build();
-         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-         CSVPrinter printer = new CSVPrinter(out, format);
-         Throwable var16 = null;
+        try (Writer out = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+             CSVPrinter printer = new CSVPrinter(out, Builder.create(CSVFormat.DEFAULT)
+                 .setHeader(new String[]{"app_id", "b_sys_id", "service_ip", "service_port", "service_path", "client_ip", "user_name", "user_id", "sc_request_id", "query_body", "query_params", "read_file_name", "error_message", "start_time", "end_time", "duration", "response_code", "response_length"}).build());
+             Stream<AccessLog> logs = this.accessLogRepository.streamWithFilter(startDate != null ? new Date(startDate) : null, endDate != null ? new Date(endDate) : null, appId, sysId, clientIp, username, userId, path, response, duration != null ? (long)duration : null)) {
+           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
-         try {
-            Stream<AccessLog> logs = this.accessLogRepository.streamWithFilter(startDate != null ? new Date(startDate) : null, endDate != null ? new Date(endDate) : null, appId, sysId, clientIp, username, userId, path, response, duration != null ? (long)duration : null);
-            Throwable var18 = null;
-
-            try {
-               logs.forEach((log) -> {
-                  try {
-                     printer.printRecord(new Object[]{log.getAppId(), log.getSysId(), log.getServerAddress(), log.getServerPort(), log.getApiPath(), log.getClientAddress(), log.getUserName(), log.getUserId(), log.getScRequestId(), log.getQueryBody(), log.getQueryParams(), log.getReadFileName(), log.getErrorMessage(), dateFormat.format(log.getStartTime()), dateFormat.format(log.getEndTime()), log.getEndTime().getTime() - log.getStartTime().getTime(), log.getResponseCode(), log.getResponseLength()});
-                     this.entityManager.detach(log);
-                  } catch (IOException e) {
-                     throw new RdsmIOException(e);
-                  }
-               });
-               LOG.info("Access log retrieving successfully finished");
-            } catch (Throwable var43) {
-               var18 = var43;
-               throw var43;
-            } finally {
-               if (logs != null) {
-                  if (var18 != null) {
-                     try {
-                        logs.close();
-                     } catch (Throwable var42) {
-                        var18.addSuppressed(var42);
-                     }
-                  } else {
-                     logs.close();
-                  }
-               }
-
-            }
-         } catch (Throwable var45) {
-            var16 = var45;
-            throw var45;
-         } finally {
-            if (printer != null) {
-               if (var16 != null) {
-                  try {
-                     printer.close();
-                  } catch (Throwable var41) {
-                     var16.addSuppressed(var41);
-                  }
-               } else {
-                  printer.close();
-               }
-            }
-
-         }
-
-      } catch (IOException e) {
-         throw new RdsmIOException(e);
-      }
+           logs.forEach((log) -> {
+              try {
+                 printer.printRecord(new Object[]{log.getAppId(), log.getSysId(), log.getServerAddress(), log.getServerPort(), log.getApiPath(), log.getClientAddress(), log.getUserName(), log.getUserId(), log.getScRequestId(), log.getQueryBody(), log.getQueryParams(), log.getReadFileName(), log.getErrorMessage(), dateFormat.format(log.getStartTime()), dateFormat.format(log.getEndTime()), log.getEndTime().getTime() - log.getStartTime().getTime(), log.getResponseCode(), log.getResponseLength()});
+                 this.entityManager.detach(log);
+              } catch (IOException e) {
+                 throw new RdsmIOException(e);
+              }
+           });
+           LOG.info("Access log retrieving successfully finished");
+        } catch (IOException e) {
+           throw new RdsmIOException(e);
+        }
    }
 
    public List<ExternalAccessLogDto> getFilteredLogs(String start, @Nullable String end) {
       SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm");
 
-      try {
-         return (List)this.filteredLogs().start(start != null ? dateFormat.parse(start).getTime() : null).end(end != null ? dateFormat.parse(end).getTime() : null).get().map(ExternalAccessLogDto::new).collect(Collectors.toList());
-      } catch (ParseException var5) {
-         throw new IllegalArgumentException("Failed to parse date interval");
-      }
+        try {
+           return (List)this.filteredLogs().start(start != null ? dateFormat.parse(start).getTime() : null).end(end != null ? dateFormat.parse(end).getTime() : null).get().map(ExternalAccessLogDto::new).collect(Collectors.toList());
+        } catch (ParseException e) {
+           throw new IllegalArgumentException("Failed to parse date interval");
+        }
    }
 
    private AccessLog constructLog(Integer responseCode, Integer responseLength, @Nullable ExternalProgramBody externalProgramBody) {
@@ -214,9 +174,9 @@ public class AccessLogServiceImpl implements AccessLogService, PeriodicActivity 
                   log.setUserName(this.jwtTokenService.getExternalUsernameFromToken(authToken));
                   log.setSysId(this.jwtTokenService.getExternalSystemIdFromToken(authToken));
                   log.setAppId(this.jwtTokenService.getAppIdFromToken(authToken));
-               } catch (SignatureException | MalformedJwtException var14) {
-                  LOG.warn("Invalid auth token, access log remains unsigned");
-               }
+                 } catch (SignatureException | MalformedJwtException e) {
+                    LOG.warn("Invalid auth token, access log remains unsigned");
+                 }
             }
 
             if (externalProgramBody != null) {

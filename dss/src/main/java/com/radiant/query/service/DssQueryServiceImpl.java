@@ -242,12 +242,12 @@ public class DssQueryServiceImpl implements DssQueryService {
                String uploadedFilename = javaImpl.getIntegrationFunction().getUploadedFilename();
                Path jarPath = Paths.get(this.fullPathProgramFile(uploadedFilename));
 
-               try {
-                  this.validateImplJarContent(javaImpl.getQuery(), Files.readAllBytes(jarPath));
-               } catch (NoSuchFileException var10) {
-                  this.serviceLogService.error("Registered plugin file " + uploadedFilename + " not found");
-                  throw new JavaQueryImplProgramNotFound(javaImpl.getImplFilename(), implementation.getQuery().getName());
-               }
+                 try {
+                    this.validateImplJarContent(javaImpl.getQuery(), Files.readAllBytes(jarPath));
+                 } catch (NoSuchFileException e) {
+                    this.serviceLogService.error("Registered plugin file " + uploadedFilename + " not found");
+                    throw new JavaQueryImplProgramNotFound(javaImpl.getImplFilename(), implementation.getQuery().getName());
+                 }
             }
          } catch (IOException e) {
             LOG.error("Failed to read query implementation jar file");
@@ -384,46 +384,25 @@ public class DssQueryServiceImpl implements DssQueryService {
 
    private QueryProgramDetails fetchQueryFromGdds(@NonNull Long queryId) {
       String url = this.applicationPropertyService.getStringValue("gdds_url") + "/api/internal/v1/query/" + queryId + "/program";
-      HttpGet get = new HttpGet(url);
-      MultiValueMap<String, Object> body = null;
+       HttpGet get = new HttpGet(url);
+       MultiValueMap<String, Object> body = null;
 
-      try {
-         CloseableHttpResponse response = this.httpClient.execute(get);
-         Throwable var6 = null;
+       try (CloseableHttpResponse response = this.httpClient.execute(get)) {
+          if (response.getStatusLine().getStatusCode() != 200) {
+             throw new FetchQueryException();
+          }
 
-         try {
-            if (response.getStatusLine().getStatusCode() != 200) {
-               throw new FetchQueryException();
-            }
-
-            String boundary = MultiPartUtils.extractBoundary(response.getEntity());
-            if (boundary != null) {
-               int buffSize = 4096;
-               MultipartStream stream = new MultipartStream(response.getEntity().getContent(), boundary.getBytes(StandardCharsets.UTF_8), 4096, (MultipartStream.ProgressNotifier)null);
-               body = MultiPartUtils.parsContent(stream, QueryProgramDetails.class, this.objectMapper);
-               LOG.trace("Fetched query info map size {}", body.size());
-            }
-         } catch (Throwable var18) {
-            var6 = var18;
-            throw var18;
-         } finally {
-            if (response != null) {
-               if (var6 != null) {
-                  try {
-                     response.close();
-                  } catch (Throwable var17) {
-                     var6.addSuppressed(var17);
-                  }
-               } else {
-                  response.close();
-               }
-            }
-
-         }
-      } catch (IOException e) {
-         this.serviceLogService.error("Failed to parse query create/update info from QNODE");
-         throw new RdsmIOException(e);
-      }
+          String boundary = MultiPartUtils.extractBoundary(response.getEntity());
+          if (boundary != null) {
+             int buffSize = 4096;
+             MultipartStream stream = new MultipartStream(response.getEntity().getContent(), boundary.getBytes(StandardCharsets.UTF_8), 4096, (MultipartStream.ProgressNotifier)null);
+             body = MultiPartUtils.parsContent(stream, QueryProgramDetails.class, this.objectMapper);
+             LOG.trace("Fetched query info map size {}", body.size());
+          }
+       } catch (IOException e) {
+          this.serviceLogService.error("Failed to parse query create/update info from QNODE");
+          throw new RdsmIOException(e);
+       }
 
       if (body != null && !body.isEmpty()) {
          QueryProgramDetails queryDetails = this.readMap(body);

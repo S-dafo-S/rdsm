@@ -89,7 +89,7 @@ public class QueryPluginProvider {
 
          try {
             Files.delete(jar);
-         } catch (NoSuchFileException var6) {
+         } catch (NoSuchFileException e) {
             LOG.info("File not found for query impl {} while replacing", queryImplName);
          } catch (IOException e) {
             LOG.error("Failed to delete query impl file {}", jar.getFileName(), e);

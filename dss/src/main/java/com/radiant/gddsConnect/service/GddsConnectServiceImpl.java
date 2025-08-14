@@ -144,7 +144,7 @@ public class GddsConnectServiceImpl implements GddsConnectService {
       if (gddsConnectDate != null) {
          try {
             result.setConnectDate(this.DATE_FORMAT.parse(gddsConnectDate));
-         } catch (ParseException var6) {
+         } catch (ParseException e) {
             throw new RuntimeException("Failed to parse gdds_connect_date application property");
          }
       }
