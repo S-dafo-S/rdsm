@@ -142,7 +142,7 @@ public class FileAccessServiceImpl implements FileAccessService, PeriodicActivit
          ranges = httpRange == null ? Collections.emptyList() : HttpRange.parseRanges(httpRange);
          initialOffset = ranges.size() == 0 ? 0L : ((HttpRange)ranges.get(0)).getRangeStart(0L);
          rangeSize = ranges.size() == 1 ? (int)(((HttpRange)ranges.get(0)).getRangeEnd(2147483647L) - initialOffset) : 0;
-      } catch (IllegalArgumentException var34) {
+      } catch (IllegalArgumentException e) {
          HttpRangeUtil.sendRangeError(response, -1L);
          return;
       }
@@ -150,69 +150,47 @@ public class FileAccessServiceImpl implements FileAccessService, PeriodicActivit
       normalizedPath = FileAccessUtils.replacePatterns(normalizedPath);
       SizedInputStream file = (SizedInputStream)connector.accept(new FileFetcherVisitor(fileAccessPath, normalizedPath, customIp, fullLogicalPath, initialOffset, rangeSize));
 
-      try {
-         InputStream input = file.getInputStream();
-         Throwable var14 = null;
+      try (InputStream input = file.getInputStream()) {
+         Long total = file.getContentLength();
+         response.setHeader("Accept-Ranges", "bytes");
+         if (ranges.isEmpty()) {
+            response.setHeader("Content-Length", total.toString());
+            long copied = (long)StreamUtils.copy(input, response.getOutputStream());
+            if (copied != total) {
+               LOG.warn("File wasn't fully read");
+            }
+         } else if (ranges.size() == 1) {
+            HttpRange range = (HttpRange)ranges.get(0);
+            long start = range.getRangeStart(total);
+            long end = range.getRangeEnd(total);
+            response.setHeader("Content-Range", String.format("bytes %s-%s/%s", start, end, total));
+            if (start > 0L || end < total) {
+               response.setStatus(206);
+            }
 
-         try {
-            Long total = file.getContentLength();
-            response.setHeader("Accept-Ranges", "bytes");
-            if (ranges.isEmpty()) {
-               response.setHeader("Content-Length", total.toString());
-               long copied = (long)StreamUtils.copy(input, response.getOutputStream());
-               if (copied != total) {
-                  LOG.warn("File wasn't fully read");
-               }
-            } else if (ranges.size() == 1) {
-               HttpRange range = (HttpRange)ranges.get(0);
+            StreamUtils.copyRange(input, response.getOutputStream(), start - file.getOffset(), end - file.getOffset());
+         } else {
+            if (!HttpRangeUtil.validateHttpRanges(ranges, total)) {
+               HttpRangeUtil.sendRangeError(response, total);
+            }
+
+            response.setContentType("multipart/byteranges; boundary=MULTIPART_BYTERANGES");
+            response.setStatus(206);
+            ServletOutputStream sos = response.getOutputStream();
+            long inputPos = 0L;
+
+            for(HttpRange range : ranges) {
+               sos.println();
                long start = range.getRangeStart(total);
                long end = range.getRangeEnd(total);
-               response.setHeader("Content-Range", String.format("bytes %s-%s/%s", start, end, total));
-               if (start > 0L || end < total) {
-                  response.setStatus(206);
-               }
-
-               StreamUtils.copyRange(input, response.getOutputStream(), start - file.getOffset(), end - file.getOffset());
-            } else {
-               if (!HttpRangeUtil.validateHttpRanges(ranges, total)) {
-                  HttpRangeUtil.sendRangeError(response, total);
-               }
-
-               response.setContentType("multipart/byteranges; boundary=MULTIPART_BYTERANGES");
-               response.setStatus(206);
-               ServletOutputStream sos = response.getOutputStream();
-               long inputPos = 0L;
-
-               for(HttpRange range : ranges) {
-                  sos.println();
-                  long start = range.getRangeStart(total);
-                  long end = range.getRangeEnd(total);
-                  sos.println("--MULTIPART_BYTERANGES");
-                  sos.println(String.format("Content-Range: bytes %s-%s/%s", start, end, total));
-                  inputPos = start + StreamUtils.copyRange(input, sos, start - inputPos - file.getOffset(), end - inputPos - file.getOffset());
-               }
-
-               sos.println();
-               sos.println("--MULTIPART_BYTERANGES--");
-            }
-         } catch (Throwable var35) {
-            var14 = var35;
-            throw var35;
-         } finally {
-            if (input != null) {
-               if (var14 != null) {
-                  try {
-                     input.close();
-                  } catch (Throwable var33) {
-                     var14.addSuppressed(var33);
-                  }
-               } else {
-                  input.close();
-               }
+               sos.println("--MULTIPART_BYTERANGES");
+               sos.println(String.format("Content-Range: bytes %s-%s/%s", start, end, total));
+               inputPos = start + StreamUtils.copyRange(input, sos, start - inputPos - file.getOffset(), end - inputPos - file.getOffset());
             }
 
+            sos.println();
+            sos.println("--MULTIPART_BYTERANGES--");
          }
-
       } catch (IOException e) {
          LOG.error("Failed to read file", e);
          throw new RdsmIOException(e);
@@ -250,8 +228,7 @@ public class FileAccessServiceImpl implements FileAccessService, PeriodicActivit
       Path filePath = Paths.get(internalPath).getFileName();
       String fileName = filePath != null ? filePath.toString() : "";
       if (fileName.contains("_directory_merged_")) {
-         try {
-            FileInputStream in = new FileInputStream("/tmp/" + fileName);
+         try (FileInputStream in = new FileInputStream("/tmp/" + fileName)) {
             StreamUtils.copy(in, response.getOutputStream());
          } catch (IOException e) {
             throw new RdsmIOException(e);
@@ -348,20 +325,18 @@ public class FileAccessServiceImpl implements FileAccessService, PeriodicActivit
          doc.addPage(new PDPage());
          int pageCount = doc.getDocumentCatalog().getPages().getCount();
          PDPage page = doc.getPage(pageCount - 1);
-         PDPageContentStream contents = new PDPageContentStream(doc, page, AppendMode.APPEND, true, false);
-
-         try {
-            PDImageXObject pdImage = PDImageXObject.createFromFileByContent(imageFile, doc);
-            contents.drawImage(pdImage, 0.0F, 0.0F, page.getMediaBox().getWidth(), page.getMediaBox().getHeight());
-         } catch (Exception e) {
-            contents.setFont(PDType1Font.HELVETICA_BOLD, 14.0F);
-            contents.beginText();
-            contents.newLineAtOffset(10.0F, 600.0F);
-            contents.showText(String.format("Failed to add image %s into PDF file", imageFileName));
-            contents.endText();
-            LOG.error("Failed to add image {} into PDF file", imageFileName, e);
-         } finally {
-            contents.close();
+         try (PDPageContentStream contents = new PDPageContentStream(doc, page, AppendMode.APPEND, true, false)) {
+            try {
+               PDImageXObject pdImage = PDImageXObject.createFromFileByContent(imageFile, doc);
+               contents.drawImage(pdImage, 0.0F, 0.0F, page.getMediaBox().getWidth(), page.getMediaBox().getHeight());
+            } catch (Exception e) {
+               contents.setFont(PDType1Font.HELVETICA_BOLD, 14.0F);
+               contents.beginText();
+               contents.newLineAtOffset(10.0F, 600.0F);
+               contents.showText(String.format("Failed to add image %s into PDF file", imageFileName));
+               contents.endText();
+               LOG.error("Failed to add image {} into PDF file", imageFileName, e);
+            }
          }
       } catch (Exception e) {
          LOG.error("Failed to add image {} into PDF file", imageFileName, e);
