@@ -67,7 +67,7 @@ public class SendProgramToDss extends ProgramStage {
       } else {
          for(String dssUrl : request.getCustomDnodeUrl()) {
             allDNodes.stream().filter((dss) -> dssUrl != null && dssUrl.equalsIgnoreCase(dss.getDnodeUrl())).findFirst().ifPresent((foundDss) -> {
-               DNode var10000 = (DNode)baseDss.putIfAbsent(dssUrl, foundDss);
+               DNode existingDNode = baseDss.putIfAbsent(dssUrl, foundDss);
             });
          }
       }

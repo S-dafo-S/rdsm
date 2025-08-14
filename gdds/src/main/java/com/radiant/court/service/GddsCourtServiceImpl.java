@@ -438,9 +438,12 @@ public class GddsCourtServiceImpl implements GddsCourtService {
    private CourtTreeNode getCourtTree(List<GddsRegion> allRegions, GddsRegion region, Map<Long, List<RegionCourt>> courtsByRegion) {
       CourtTreeNode node = GddsCourtUtils.createLeafNode(region);
       if (courtsByRegion.containsKey(region.getId())) {
-         Stream var10000 = ((List)courtsByRegion.get(region.getId())).stream().sorted(Comparator.comparing(RegionCourt::getOrder)).map(RegionCourt::getCourt).map(GddsCourtUtils::createLeafNode);
-         List var10001 = node.getChildren();
-         var10000.forEach(var10001::add);
+         Stream<CourtTreeNode> courtNodeStream = ((List<RegionCourt>)courtsByRegion.get(region.getId())).stream()
+            .sorted(Comparator.comparing(RegionCourt::getOrder))
+            .map(RegionCourt::getCourt)
+            .map(GddsCourtUtils::createLeafNode);
+         List<CourtTreeNode> children = node.getChildren();
+         courtNodeStream.forEach(children::add);
       }
 
       List<GddsRegion> subRegions = (List)allRegions.stream().filter((c) -> c.getParent() != null && c.getParent().getId().equals(region.getId())).collect(Collectors.toList());

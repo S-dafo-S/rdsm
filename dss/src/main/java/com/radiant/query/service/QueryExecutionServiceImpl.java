@@ -78,9 +78,8 @@ public class QueryExecutionServiceImpl implements QueryExecutionService {
             case SQL:
                Set<Long> executeDcId = (Set)courtLinkedConnectors.stream().map(DataConnector::getId).collect(Collectors.toSet());
                List<QueryImplConnectorDto> executionNamedDcList = (List)testExecutionDto.getNamedConnectors().stream().filter((namedDc) -> {
-                  Stream var10000 = namedDc.getDataConnectors().stream();
-                  executeDcId.getClass();
-                  return var10000.anyMatch(executeDcId::contains);
+                  Stream<Long> dcIdStream = namedDc.getDataConnectors().stream();
+                  return dcIdStream.anyMatch(executeDcId::contains);
                }).collect(Collectors.toList());
                if (executionNamedDcList.isEmpty()) {
                   throw new IllegalStateException("Query impl data connectors don't match to court data connectors");
