@@ -41,33 +41,12 @@ public class GddsApplication {
       Properties props = new Properties();
       String libraryDir = System.getenv("GDDS_LIB_DIR");
       if (libraryDir == null) {
-         try {
-            InputStream is = loader.getResourceAsStream("application.properties");
-            Throwable var4 = null;
-
-            try {
-               props.load(is);
-            } catch (Throwable var14) {
-               var4 = var14;
-               throw var14;
-            } finally {
-               if (is != null) {
-                  if (var4 != null) {
-                     try {
-                        is.close();
-                     } catch (Throwable var13) {
-                        var4.addSuppressed(var13);
-                     }
-                  } else {
-                     is.close();
-                  }
-               }
-
-            }
-         } catch (IOException var16) {
-            LOG.error("Failed to read application properties");
+         try (InputStream is = loader.getResourceAsStream("application.properties")) {
+            props.load(is);
+         } catch (IOException e) {
+            LOG.error("Failed to read application properties", e);
+            return new SpringApplication(new Class[]{GddsApplication.class});
          }
-
          libraryDir = props.getProperty("gddslib.dir");
       }
 
