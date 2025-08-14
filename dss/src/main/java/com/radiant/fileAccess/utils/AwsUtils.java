@@ -60,15 +60,15 @@ public class AwsUtils {
                return true;
             }
          }
-      } catch (AmazonServiceException var8) {
-         if (404 == var8.getStatusCode()) {
+      } catch (AmazonServiceException e) {
+         if (404 == e.getStatusCode()) {
             isBucketExists = false;
          } else {
-            if ("SignatureDoesNotMatch".equals(var8.getErrorCode()) || "InvalidAccessKeyId".equals(var8.getErrorCode()) || "PermanentRedirect".equals(var8.getErrorCode())) {
-               throw new InsufficientUserPermissionsException(var8.getErrorMessage());
+            if ("SignatureDoesNotMatch".equals(e.getErrorCode()) || "InvalidAccessKeyId".equals(e.getErrorCode()) || "PermanentRedirect".equals(e.getErrorCode())) {
+               throw new InsufficientUserPermissionsException(e.getErrorMessage());
             }
 
-            if (403 == var8.getStatusCode()) {
+            if (403 == e.getStatusCode()) {
                LOG.info("Try to get object");
                if (StringUtils.isEmpty(connectorBucketName)) {
                   throw new InsufficientUserPermissionsException("Access denied to get list of buckets!");

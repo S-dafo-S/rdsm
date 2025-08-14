@@ -326,9 +326,9 @@ public class RestKafkaServiceImpl implements KafkaService {
       if (!this.listenersStarted) {
          try {
             this.creatListeners();
-         } catch (Exception var2) {
-            LOG.warn("Kafka connection failed");
-         }
+           } catch (Exception e) {
+              LOG.warn("Kafka connection failed");
+           }
 
       }
    }
@@ -398,16 +398,16 @@ public class RestKafkaServiceImpl implements KafkaService {
          URI gddsUri;
          try {
             gddsUri = new URI(gddsUrl);
-         } catch (URISyntaxException var5) {
-            throw new WrongUrlException(gddsUrl);
-         }
+           } catch (URISyntaxException e) {
+              throw new WrongUrlException(gddsUrl);
+           }
 
-         try {
-            URI kafkaUri = new URI(gddsUri.getScheme(), gddsUri.getUserInfo(), gddsUri.getHost(), gddsUri.getPort(), "/kafka", gddsUri.getQuery(), gddsUri.getFragment());
-            return kafkaUri.toString();
-         } catch (URISyntaxException var4) {
-            throw new WrongUrlException(gddsUrl);
-         }
+           try {
+              URI kafkaUri = new URI(gddsUri.getScheme(), gddsUri.getUserInfo(), gddsUri.getHost(), gddsUri.getPort(), "/kafka", gddsUri.getQuery(), gddsUri.getFragment());
+              return kafkaUri.toString();
+           } catch (URISyntaxException e) {
+              throw new WrongUrlException(gddsUrl);
+           }
       }
    }
 

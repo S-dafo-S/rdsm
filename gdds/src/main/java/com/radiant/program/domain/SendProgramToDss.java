@@ -107,34 +107,13 @@ public class SendProgramToDss extends ProgramStage {
 
                ResponseEntity<Resource> responseEntity = (ResponseEntity)TransactionUtils.doWithCheckForUndesirableActiveTransaction(() -> this.restTemplate.exchange(url, HttpMethod.POST, requestEntity, Resource.class), LOG, "SendProgramToDss");
                this.dnodeAccessLogService.log(dss, url.toString(), true, (String)null);
-               if (responseEntity.getBody() != null) {
-                  try {
-                     InputStream is = ((Resource)responseEntity.getBody()).getInputStream();
-                     Throwable var11 = null;
-
-                     try {
-                        StreamUtils.copy(is, response.getServletResponse().getOutputStream());
-                     } catch (Throwable var24) {
-                        var11 = var24;
-                        throw var24;
-                     } finally {
-                        if (is != null) {
-                           if (var11 != null) {
-                              try {
-                                 is.close();
-                              } catch (Throwable var23) {
-                                 var11.addSuppressed(var23);
-                              }
-                           } else {
-                              is.close();
-                           }
-                        }
-
-                     }
-                  } catch (IOException e) {
-                     throw new RdsmIOException(e);
-                  }
-               }
+                 if (responseEntity.getBody() != null) {
+                    try (InputStream is = responseEntity.getBody().getInputStream()) {
+                       StreamUtils.copy(is, response.getServletResponse().getOutputStream());
+                    } catch (IOException e) {
+                       throw new RdsmIOException(e);
+                    }
+                 }
             }
 
          } catch (ResourceAccessException exc) {

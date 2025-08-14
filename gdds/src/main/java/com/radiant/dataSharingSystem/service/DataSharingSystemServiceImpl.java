@@ -220,21 +220,21 @@ public class DataSharingSystemServiceImpl implements DataSharingSystemService, P
       try {
          this.verifyDssUrl(dnode.getDnodeUrl(), (String)null);
          return true;
-      } catch (DSSVerificationException var4) {
-         return false;
-      }
+        } catch (DSSVerificationException e) {
+           return false;
+        }
    }
 
    public void performActivity(Object context) {
       LOG.trace("Update DNodes connect status and access counts");
       this.getAllDss().forEach((dss) -> {
          if (StringUtils.isNotEmpty(dss.getDnodeUrl())) {
-            try {
-               this.verifyDssUrl(dss.getDnodeUrl(), (String)null);
-               dss.setConnectStatus(true);
-            } catch (DSSVerificationException var4) {
-               dss.setConnectStatus(false);
-            }
+              try {
+                 this.verifyDssUrl(dss.getDnodeUrl(), (String)null);
+                 dss.setConnectStatus(true);
+              } catch (DSSVerificationException e) {
+                 dss.setConnectStatus(false);
+              }
          } else {
             dss.setConnectStatus(false);
          }
@@ -335,8 +335,8 @@ public class DataSharingSystemServiceImpl implements DataSharingSystemService, P
          if (StringUtils.isEmpty(result) || id != null && !result.contains(id)) {
             throw new DSSVerificationException(dssUrl, "Wrong verification reply!");
          }
-      } catch (ResourceAccessException var7) {
-         throw new DSSVerificationException(dssUrl, "Connection error!");
-      }
+        } catch (ResourceAccessException e) {
+           throw new DSSVerificationException(dssUrl, "Connection error!");
+        }
    }
 }
