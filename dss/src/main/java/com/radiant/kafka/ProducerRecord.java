@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ProducerRecord<V> implements Serializable {
-   private List<Map<String, Object>> records = new ArrayList();
+   private static final long serialVersionUID = 1L;
+
+   private List<Map<String, Object>> records = new ArrayList<>();
 
    public ProducerRecord(String key, V value) {
-      Map<String, Object> map = new HashMap();
+      Map<String, Object> map = new HashMap<String, Object>();
       if (key != null) {
          map.put("key", key);
       }
