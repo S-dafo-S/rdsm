@@ -204,13 +204,13 @@ public class QueryExecutionServiceImpl implements QueryExecutionService {
    private String wrapPlainString(String input) {
       try {
          new JSONObject(input);
-      } catch (JSONException e) {
+      } catch (JSONException objectException) {
          try {
             new JSONArray(input);
-         } catch (JSONException e1) {
+         } catch (JSONException arrayException) {
             try {
                return (new ObjectMapper()).writeValueAsString(new StringValue(input));
-            } catch (JsonProcessingException e2) {
+            } catch (JsonProcessingException processingException) {
                throw new RuntimeException("Failed to read query result");
             }
          }

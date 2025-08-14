@@ -73,13 +73,12 @@ public class AwsUtils {
                if (StringUtils.isEmpty(connectorBucketName)) {
                   throw new InsufficientUserPermissionsException("Access denied to get list of buckets!");
                }
-
                try {
                   client.getObject(testBucketName, UUID.randomUUID().toString());
                   isBucketExists = true;
-               } catch (AmazonServiceException exc1) {
-                  if (404 == exc1.getStatusCode()) {
-                     isBucketExists = !exc1.getErrorCode().equals("NoSuchBucket");
+               } catch (AmazonServiceException serviceException) {
+                  if (404 == serviceException.getStatusCode()) {
+                     isBucketExists = !serviceException.getErrorCode().equals("NoSuchBucket");
                   }
                }
             }

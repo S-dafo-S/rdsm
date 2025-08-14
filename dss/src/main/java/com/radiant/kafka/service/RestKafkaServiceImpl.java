@@ -150,9 +150,9 @@ public class RestKafkaServiceImpl implements KafkaService {
       try {
          HttpHeaders headers = new HttpHeaders();
          headers.add("Accept", "application/vnd.kafka.v2+json");
-         ResponseEntity<List<String>> response1 = this.restTemplate.exchange(topicsUrl, HttpMethod.GET, new HttpEntity(headers), new ParameterizedTypeReference<List<String>>() {
+         ResponseEntity<List<String>> response = this.restTemplate.exchange(topicsUrl, HttpMethod.GET, new HttpEntity(headers), new ParameterizedTypeReference<List<String>>() {
          }, new Object[0]);
-         List<String> topics = (List)response1.getBody();
+         List<String> topics = response.getBody();
          if (topics != null && topics.stream().anyMatch((t) -> t.equals(topicName))) {
             return;
          }
@@ -246,9 +246,9 @@ public class RestKafkaServiceImpl implements KafkaService {
       String consumerId = "";
 
       try {
-         ResponseEntity<ConsumerResultDto> response1 = this.restTemplate.exchange(this.consumerGroupUrl + "/", HttpMethod.POST, entity, ConsumerResultDto.class, new Object[0]);
-         ConsumerResultDto resultDto = (ConsumerResultDto)response1.getBody();
-         consumerId = resultDto != null ? resultDto.getInstanceId() : "";
+         ResponseEntity<ConsumerResultDto> response = this.restTemplate.exchange(this.consumerGroupUrl + "/", HttpMethod.POST, entity, ConsumerResultDto.class, new Object[0]);
+         ConsumerResultDto result = response.getBody();
+         consumerId = result != null ? result.getInstanceId() : "";
          LOG.info("consumer {} created", consumerId);
       } catch (RestClientResponseException ex) {
          LOG.warn(ex.getMessage());
@@ -293,8 +293,8 @@ public class RestKafkaServiceImpl implements KafkaService {
       try {
          for(ConsumerRecord<String, GddsQueryEvent> ev : events) {
             this.processMessageWithCommit(ev, (value) -> {
-               boolean res = this.dssQueryService.processQueryUpdateEvent(value);
-               if (res) {
+               boolean updated = this.dssQueryService.processQueryUpdateEvent(value);
+               if (updated) {
                   needRestartWrapped.set(true);
                }
 
@@ -342,8 +342,8 @@ public class RestKafkaServiceImpl implements KafkaService {
          HttpEntity<?> record = new HttpEntity(headers);
 
          try {
-            ResponseEntity<List<ConsumerRecord<String, T>>> res = ((RestTemplate)this.topicRestTemplates.get(topic)).exchange(this.consumerGroupUrl + consumerUrl + String.format("/records?timeout=%s", 15000), HttpMethod.GET, record, responseType, new Object[0]);
-            return (List)res.getBody();
+            ResponseEntity<List<ConsumerRecord<String, T>>> response = ((RestTemplate)this.topicRestTemplates.get(topic)).exchange(this.consumerGroupUrl + consumerUrl + String.format("/records?timeout=%s", 15000), HttpMethod.GET, record, responseType, new Object[0]);
+            return response.getBody();
          } catch (RestClientResponseException ex) {
             try {
                Thread.sleep(5000L);
@@ -379,8 +379,8 @@ public class RestKafkaServiceImpl implements KafkaService {
          String consumerUrl = String.format("/instances/%s", consumerName);
 
          try {
-            ResponseEntity<String> delRes = ((RestTemplate)entry.getValue()).exchange(this.consumerGroupUrl + consumerUrl, HttpMethod.DELETE, entity, String.class, new Object[0]);
-            LOG.info("Deleted {} ({})", this.consumerGroupUrl + consumerUrl, delRes.getBody());
+            ResponseEntity<String> deleteResponse = ((RestTemplate)entry.getValue()).exchange(this.consumerGroupUrl + consumerUrl, HttpMethod.DELETE, entity, String.class, new Object[0]);
+            LOG.info("Deleted {} ({})", this.consumerGroupUrl + consumerUrl, deleteResponse.getBody());
          } catch (RestClientResponseException ex) {
             LOG.warn("Tried to delete {}", this.consumerGroupUrl + consumerUrl);
             LOG.warn(ex.getMessage());
@@ -422,8 +422,8 @@ public class RestKafkaServiceImpl implements KafkaService {
          HttpEntity<Offsets> offsetsData = new HttpEntity(offsets, headers);
 
          try {
-            ResponseEntity<String> res = ((RestTemplate)this.topicRestTemplates.get(ev.getTopic())).exchange(this.consumerGroupUrl + consumerUrl + "/offsets", HttpMethod.POST, offsetsData, String.class, new Object[0]);
-            if (res.getStatusCode().equals(HttpStatus.OK)) {
+            ResponseEntity<String> response = ((RestTemplate)this.topicRestTemplates.get(ev.getTopic())).exchange(this.consumerGroupUrl + consumerUrl + "/offsets", HttpMethod.POST, offsetsData, String.class, new Object[0]);
+            if (response.getStatusCode().equals(HttpStatus.OK)) {
                LOG.info("Consumed message has been committed");
             }
          } catch (RestClientResponseException ex) {
@@ -436,16 +436,16 @@ public class RestKafkaServiceImpl implements KafkaService {
    private <T> void getLastCommitedOffset(ConsumerRecord<String, T> ev) {
       String consumerName = String.format("%s-%s", this.dssId, ev.getTopic());
       String consumerUrl = String.format("/instances/%s", consumerName);
-      HttpHeaders headers1 = new HttpHeaders();
-      headers1.add("Content-Type", "application/vnd.kafka.v2+json");
+      HttpHeaders headers = new HttpHeaders();
+      headers.add("Content-Type", "application/vnd.kafka.v2+json");
       Partitions partitions = new Partitions();
       partitions.setPartitions(Collections.singletonList(RestKafkaServiceImpl.Partition.builder().topic(ev.getTopic()).partition(ev.getPartition()).build()));
-      HttpEntity<Partitions> partitionsData1 = new HttpEntity(partitions, headers1);
+      HttpEntity<Partitions> partitionsRequest = new HttpEntity(partitions, headers);
 
       try {
-         ResponseEntity<String> res = this.restTemplate.exchange(this.consumerGroupUrl + consumerUrl + "/offsets", HttpMethod.GET, partitionsData1, String.class, new Object[0]);
-         if (res.getStatusCode().equals(HttpStatus.OK)) {
-            LOG.info("last comitted offset:  {}", res.getBody());
+         ResponseEntity<String> response = this.restTemplate.exchange(this.consumerGroupUrl + consumerUrl + "/offsets", HttpMethod.GET, partitionsRequest, String.class, new Object[0]);
+         if (response.getStatusCode().equals(HttpStatus.OK)) {
+            LOG.info("last comitted offset:  {}", response.getBody());
          }
       } catch (RestClientResponseException ex) {
          LOG.warn(ex.getMessage());
@@ -463,7 +463,7 @@ public class RestKafkaServiceImpl implements KafkaService {
       HttpEntity<Offsets> offsetsData = new HttpEntity(offsets, headers);
 
       try {
-         ResponseEntity<String> res = this.restTemplate.exchange(this.consumerGroupUrl + consumerUrl + "/positions", HttpMethod.POST, offsetsData, String.class, new Object[0]);
+         this.restTemplate.exchange(this.consumerGroupUrl + consumerUrl + "/positions", HttpMethod.POST, offsetsData, String.class, new Object[0]);
          LOG.info("Offset was reset to {}", ev.getOffset());
       } catch (RestClientResponseException ex) {
          LOG.warn(ex.getMessage());
