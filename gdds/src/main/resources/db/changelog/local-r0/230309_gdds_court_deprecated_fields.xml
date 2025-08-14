@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1678399624576-1">
+        <dropForeignKeyConstraint baseTableName="court" constraintName="court_parent_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1678399624576-2">
+        <dropForeignKeyConstraint baseTableName="court" constraintName="court_region_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1678399624576-3">
+        <dropColumn columnName="parent" tableName="court"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1678399624576-4">
+        <dropColumn columnName="region" tableName="court"/>
+    </changeSet>
+</databaseChangeLog>

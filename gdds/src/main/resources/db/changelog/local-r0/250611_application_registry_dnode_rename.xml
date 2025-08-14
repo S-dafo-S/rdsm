@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1749669297068-1">
+        <dropForeignKeyConstraint baseTableName="application_registry_dss_access"
+                                  constraintName="application_registry_dss_access_registry_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749669297068-2">
+        <renameTable oldTableName="application_registry_dss_access" newTableName="application_registry_dnode_access"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749670417372-3">
+        <renameColumn oldColumnName="dss_id" newColumnName="dnode_id" tableName="application_registry_dnode_access"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749669297068-4">
+        <addForeignKeyConstraint baseColumnNames="registry_id" baseTableName="application_registry_dnode_access"
+                                 constraintName="application_registry_dnode_access_registry_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="application_registry" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

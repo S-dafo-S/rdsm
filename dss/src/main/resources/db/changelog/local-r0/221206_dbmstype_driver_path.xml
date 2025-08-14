@@ -1,0 +1,83 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="ksvintsov@soylent.io (generated)" id="1670319443579-3">
+        <addColumn tableName="dbms_type">
+            <column name="driver_cp" type="varchar(1024)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="jdbc_datasource_foreign_key_cascade" author="ksvintsov@soylent.io">
+        <dropForeignKeyConstraint baseTableName="jdbc_data_connector" constraintName="jdbc_data_connector_type_fk"/>
+        <addForeignKeyConstraint baseTableName="jdbc_data_connector" baseColumnNames="dbms_type"
+                                 constraintName="jdbc_data_connector_type_fk"
+                                 referencedTableName="dbms_type"
+                                 referencedColumnNames="type" onUpdate="CASCADE"/>
+    </changeSet>
+    <changeSet id="add_kingbase_86" author="ksvintsov@soylent.io">
+        <sql>
+            INSERT INTO dbms_type (display_name, driver_class, type, jdbc_url_format, default_port)
+            SELECT 'Kingbase >= 8.6', driver_class, 'KINGBASE86', jdbc_url_format, default_port
+            FROM dbms_type
+            WHERE type = 'KINGBASE8';
+            UPDATE dbms_type
+            SET type='KINGBASE82',
+                display_name='Kingbase >= 8.2'
+            WHERE type = 'KINGBASE8';
+            UPDATE jdbc_data_connector
+            SET dbms_type='KINGBASE82'
+            WHERE dbms_type = 'KINGBASE8';
+        </sql>
+    </changeSet>
+    <changeSet id="add_driver_cp" author="ksvintsov@soylent.io">
+        <sql>
+            UPDATE dbms_type
+            SET driver_cp='kingbase8-8.6.0.jar'
+            WHERE type = 'KINGBASE86';
+
+            UPDATE dbms_type
+            SET driver_cp='kingbase8-8.2.0.jar'
+            WHERE type = 'KINGBASE82';
+
+            UPDATE dbms_type
+            SET driver_cp='mysql-connector-java-8.0.26.jar'
+            WHERE type = 'MYSQL';
+
+            UPDATE dbms_type
+            SET driver_cp='ojdbc8-12.2.0.1.jar:oraclepki-21.1.0.0.jar:osdt_core-21.1.0.0.jar:ucp-21.1.0.0.jar::ons-21.1.0.0.jar:osdt_cert-21.1.0.0.jar:simplefan-21.1.0.0.jar'
+            WHERE TYPE = 'ORACLE';
+
+            UPDATE dbms_type
+            SET driver_cp = 'DmJdbcDriver18-1.8.jar'
+            WHERE type = 'DAMENG';
+
+            UPDATE dbms_type
+            SET driver_cp = 'arterybase-3.6.2.3.jar'
+            WHERE type = 'ARTERYBASE';
+
+            UPDATE dbms_type
+            SET driver_cp = 'mariadb-java-client-3.0.6.jar'
+            WHERE type = 'MARIADB';
+
+            UPDATE dbms_type
+            SET driver_cp = 'oscarJDBC-16.jar'
+            WHERE type = 'OSCAR';
+
+            UPDATE dbms_type
+            SET driver_cp='mssql-jdbc-9.2.1.jre8.jar'
+            WHERE type = 'SQLSERVER';
+
+            UPDATE dbms_type
+            SET driver_cp='HgdbJdbc-6.2.2.jar'
+            WHERE type = 'HIGHGO';
+
+            UPDATE dbms_type
+            SET driver_cp = 'oceanbase-client-2.2.9.jar'
+            WHERE type = 'OCEANBASE';
+
+            UPDATE dbms_type
+            SET driver_cp = 'jcc-11.5.7.0.jar'
+            WHERE type = 'DB2';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

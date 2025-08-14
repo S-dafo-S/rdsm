@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="makhmetov@soylent.io (generated)" id="1664260304236-1">
+        <sql>
+            UPDATE dbms_type SET
+                jdbc_url_format = 'jdbc:oceanbase://${DOLLAR_SIGN}{hostname}:${DOLLAR_SIGN}{port}/${DOLLAR_SIGN}{dbName}?useUnicode=true&amp;characterEncoding=utf-8&amp;clientEncoding=utf-8',
+                driver_class = 'com.alipay.oceanbase.jdbc.Driver'
+                WHERE type = 'OCEANBASE';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

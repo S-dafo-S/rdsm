@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="makhmetov@soylent.io (generated)" id="1685091372688-1">
+        <createTable tableName="data_connector_child">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="data_connector_childPK"/>
+            </column>
+            <column name="data_connector" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="parent_data_connector_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1685091372688-12">
+        <addForeignKeyConstraint baseColumnNames="data_connector" baseTableName="data_connector_child"
+                                 constraintName="data_connector_child_data_connector_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="data_connector" validate="true"/>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1685091372688-13">
+        <addForeignKeyConstraint baseColumnNames="parent_data_connector_id" baseTableName="data_connector_child"
+                                 constraintName="data_connector_child_parent_data_connector_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="data_connector"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1685091372688-14">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="var_db_data_connector"
+                                 constraintName="var_db_data_connector_pk_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="data_connector"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1685091372688-15">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="var_ftp_data_connector"
+                                 constraintName="var_ftp_data_connector_pk_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="data_connector"
+                                 validate="true"/>
+    </changeSet>
+</databaseChangeLog>

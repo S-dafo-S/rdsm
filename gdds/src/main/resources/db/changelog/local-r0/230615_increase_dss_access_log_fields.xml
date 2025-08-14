@@ -1,0 +1,11 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="makhmetov@soylent.io (generated)" id="1686815569850-1">
+        <modifyDataType tableName="dss_access_log" columnName="url" newDataType="VARCHAR(10240)"/>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1686815569850-2">
+        <modifyDataType tableName="dss_access_log" columnName="message" newDataType="VARCHAR(10240)"/>
+    </changeSet>
+</databaseChangeLog>

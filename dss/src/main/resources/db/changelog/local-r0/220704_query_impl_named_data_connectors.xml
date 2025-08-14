@@ -1,0 +1,70 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1656954911120-1">
+        <createTable tableName="query_implementation_data_connector">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="query_implementation_data_connectorPK"/>
+            </column>
+            <column name="key" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kind" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="query_impl" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1656954911120-2">
+        <createTable tableName="query_implementation_data_connector_dc">
+            <column name="query_implementation_data_connector_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_connector_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1656954911120-4">
+        <addForeignKeyConstraint baseColumnNames="data_connector_id"
+                                 baseTableName="query_implementation_data_connector_dc"
+                                 constraintName="query_implementation_data_connector_dc_connector_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="data_connector" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1656954911120-5">
+        <addForeignKeyConstraint baseColumnNames="query_implementation_data_connector_id"
+                                 baseTableName="query_implementation_data_connector_dc"
+                                 constraintName="query_implementation_data_connector_dc_impl_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="query_implementation_data_connector" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1656954911120-6">
+        <addForeignKeyConstraint baseColumnNames="query_impl" baseTableName="query_implementation_data_connector"
+                                 constraintName="query_implementation_data_connector_query_impl_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="query_implementation" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1656954911120-7">
+        <sql>
+            INSERT INTO query_implementation_data_connector(query_impl, key, kind)
+            SELECT impl, 'connect1', 'DB'
+            FROM query_implementation_connector
+            GROUP BY impl;
+        </sql>
+        <sql>
+            INSERT INTO query_implementation_data_connector_dc(query_implementation_data_connector_id, data_connector_id)
+            SELECT impl_dc_new.id, impl_dc_new_old.data_connector
+            FROM query_implementation_data_connector impl_dc_new
+                     JOIN query_implementation_connector impl_dc_new_old
+                          ON impl_dc_new.query_impl = impl_dc_new_old.impl;
+        </sql>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1656954911120-8">
+        <renameTable oldTableName="query_implementation_connector"
+                     newTableName="query_implementation_connector_deprecated"/>
+    </changeSet>
+</databaseChangeLog>

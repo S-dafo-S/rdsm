@@ -1,0 +1,124 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-5">
+        <addColumn tableName="data_connector">
+            <column name="archive" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-6">
+        <addColumn tableName="data_connector">
+            <column defaultValueBoolean="false" name="archived" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-7">
+        <addColumn tableName="data_connector">
+            <column name="live" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-8">
+        <addColumn tableName="dbms_type">
+            <column name="type" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-9">
+        <addUniqueConstraint columnNames="name" constraintName="data_connector_name_uniq" tableName="data_connector"/>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-10">
+        <createIndex indexName="IX_dbms_typePK" tableName="dbms_type" unique="true">
+            <column name="type"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-11">
+        <dropForeignKeyConstraint baseTableName="data_connector_case_type" constraintName="data_connector_case_type_dc_fk"/>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-12">
+        <dropTable tableName="data_connector_case_type"/>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-13">
+        <dropForeignKeyConstraint baseTableName="jdbc_data_connector" constraintName="jdbc_data_connector_type_fk"/>
+        <dropColumn columnName="name" tableName="dbms_type"/>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-2">
+        <addForeignKeyConstraint baseColumnNames="dbms_type" baseTableName="jdbc_data_connector" constraintName="jdbc_data_connector_type_fk" referencedColumnNames="type" referencedTableName="dbms_type"/>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-4">
+        <addPrimaryKey columnNames="type" constraintName="dbms_typePK" tableName="dbms_type"/>
+    </changeSet>
+    <changeSet author="spomelov@soylent.io (generated)" id="1631783580073-14">
+        <modifyDataType tableName="jdbc_data_connector" columnName="user_password" newDataType="bytea" />
+    </changeSet>
+
+    <changeSet author="spomelov@soylent.io (generated)" id="jdbc-connector-new-fields">
+        <addColumn tableName="jdbc_data_connector">
+            <column name="db_name" type="varchar(128)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="jdbc_data_connector">
+            <column name="port" type="int4">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="spomelov@soylent.io (generated)" id="dbms-type-new-fields">
+        <addColumn tableName="dbms_type">
+            <column name="jdbc_url_format" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addColumn tableName="dbms_type">
+            <column name="default_port" type="int4"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="spomelov@soylent.io" id="create-initial-data-connector-types">
+        <insert tableName="dbms_type">
+            <column name="type" value="ORACLE"/>
+            <column name="driver_class" value="oracle.jdbc.driver.OracleDriver"/>
+            <column name="jdbc_url_format"
+                    value="jdbc:oracle:thin:@${DOLLAR_SIGN}{hostname}:${DOLLAR_SIGN}{port}:${DOLLAR_SIGN}{dbName}"/>
+            <column name="default_port" value="1521"/>
+            <column name="display_name" value="Oracle"/>
+        </insert>
+
+        <insert tableName="dbms_type">
+            <column name="type" value="SYBASE"/>
+            <column name="driver_class" value="com.sybase.jdbc4.jdbc.SybDriver"/>
+            <column name="jdbc_url_format"
+                    value="jdbc:sybase:Tds:${DOLLAR_SIGN}{hostname}:${DOLLAR_SIGN}{port}/${DOLLAR_SIGN}{dbName}"/>
+            <column name="default_port" value="5000"/>
+            <column name="display_name" value="Sybase"/>
+        </insert>
+
+        <insert tableName="dbms_type">
+            <column name="type" value="POSTGRESQL"/>
+            <column name="driver_class" value="org.postgresql.Driver"/>
+            <column name="jdbc_url_format"
+                    value="jdbc:postgresql://${DOLLAR_SIGN}{hostname}:${DOLLAR_SIGN}{port}/${DOLLAR_SIGN}{dbName}"/>
+            <column name="default_port" value="5432"/>
+            <column name="display_name" value="PostgreSQL"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="spomelov@soylent.io" id="update-sybase-to-jtds-driver">
+        <update tableName="dbms_type">
+            <column name="driver_class" value="net.sourceforge.jtds.jdbc.Driver"/>
+            <column name="jdbc_url_format"
+                    value="jdbc:jtds:sybase://${DOLLAR_SIGN}{hostname}:${DOLLAR_SIGN}{port}/${DOLLAR_SIGN}{dbName}"/>
+            <where>type='SYBASE'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

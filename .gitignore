@@ -1,0 +1,8 @@
+dss/analysis/
+dss/lib/
+dss/target/
+.DS_Store
+gdds/analysis/
+gdds/lib/
+gdds/target/
+architectural_analysis.md

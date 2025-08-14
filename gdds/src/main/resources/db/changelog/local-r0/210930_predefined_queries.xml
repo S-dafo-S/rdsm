@@ -1,0 +1,270 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io" id="getAllLiveCases">
+        <insert tableName="query">
+            <column name="name" value="getAllLiveCases"/>
+            <column name="case_type" value="LIVE"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getAllArchivedCases">
+        <insert tableName="query">
+            <column name="name" value="getAllArchivedCases"/>
+            <column name="case_type" value="ARCHIVED"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getLiveCasesByType">
+        <insert tableName="query">
+            <column name="name" value="getLiveCasesByType"/>
+            <column name="case_type" value="LIVE"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getLiveCasesByType')"/>
+            <column name="name" value="type"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getArchivedCasesByType">
+        <insert tableName="query">
+            <column name="name" value="getArchivedCasesByType"/>
+            <column name="case_type" value="ARCHIVED"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getArchivedCasesByType')"/>
+            <column name="name" value="type"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getLiveCaseByCaseNumber">
+        <insert tableName="query">
+            <column name="name" value="getLiveCaseByCaseNumber"/>
+            <column name="case_type" value="LIVE"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getLiveCaseByCaseNumber')"/>
+            <column name="name" value="caseNumber"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getArchivedCaseByCaseNumber">
+        <insert tableName="query">
+            <column name="name" value="getArchivedCaseByCaseNumber"/>
+            <column name="case_type" value="ARCHIVED"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getArchivedCaseByCaseNumber')"/>
+            <column name="name" value="caseNumber"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getLiveCasesByPartialCaseNumber">
+        <insert tableName="query">
+            <column name="name" value="getLiveCasesByPartialCaseNumber"/>
+            <column name="case_type" value="LIVE"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id"
+                    valueComputed="(SELECT id FROM query WHERE name='getLiveCasesByPartialCaseNumber')"/>
+            <column name="name" value="partialCaseNumber"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getArchivedCasesByPartialCaseNumber">
+        <insert tableName="query">
+            <column name="name" value="getArchivedCasesByPartialCaseNumber"/>
+            <column name="case_type" value="ARCHIVED"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id"
+                    valueComputed="(SELECT id FROM query WHERE name='getArchivedCasesByPartialCaseNumber')"/>
+            <column name="name" value="partialCaseNumber"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getLiveCaseByCaseId">
+        <insert tableName="query">
+            <column name="name" value="getLiveCaseByCaseId"/>
+            <column name="case_type" value="LIVE"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getLiveCaseByCaseId')"/>
+            <column name="name" value="caseId"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getArchivedCaseByCaseId">
+        <insert tableName="query">
+            <column name="name" value="getArchivedCaseByCaseId"/>
+            <column name="case_type" value="ARCHIVED"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getArchivedCaseByCaseId')"/>
+            <column name="name" value="caseId"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getLiveCasesByFilingDate">
+        <insert tableName="query">
+            <column name="name" value="getLiveCasesByFilingDate"/>
+            <column name="case_type" value="LIVE"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getLiveCasesByFilingDate')"/>
+            <column name="name" value="beginDate"/>
+            <column name="order" value="0"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getLiveCasesByFilingDate')"/>
+            <column name="name" value="endDate"/>
+            <column name="order" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getArchivedCasesByFilingDate">
+        <insert tableName="query">
+            <column name="name" value="getArchivedCasesByFilingDate"/>
+            <column name="case_type" value="ARCHIVED"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getArchivedCasesByFilingDate')"/>
+            <column name="name" value="beginDate"/>
+            <column name="order" value="0"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getArchivedCasesByFilingDate')"/>
+            <column name="name" value="endDate"/>
+            <column name="order" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getLiveCaseDocumentDirectoryByCaseID">
+        <insert tableName="query">
+            <column name="name" value="getLiveCaseDocumentDirectoryByCaseID"/>
+            <column name="case_type" value="LIVE"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getLiveCaseDocumentDirectoryByCaseID')"/>
+            <column name="name" value="caseId"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getArchivedCaseDocumentDirectoryByCaseID">
+        <insert tableName="query">
+            <column name="name" value="getArchivedCaseDocumentDirectoryByCaseID"/>
+            <column name="case_type" value="ARCHIVED"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getArchivedCaseDocumentDirectoryByCaseID')"/>
+            <column name="name" value="caseId"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getLiveCaseDocumentDirectoryByCaseNumber">
+        <insert tableName="query">
+            <column name="name" value="getLiveCaseDocumentDirectoryByCaseNumber"/>
+            <column name="case_type" value="LIVE"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getLiveCaseDocumentDirectoryByCaseNumber')"/>
+            <column name="name" value="caseNumber"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getArchivedCaseDocumentDirectoryByCaseNumber">
+        <insert tableName="query">
+            <column name="name" value="getArchivedCaseDocumentDirectoryByCaseNumber"/>
+            <column name="case_type" value="ARCHIVED"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getArchivedCaseDocumentDirectoryByCaseNumber')"/>
+            <column name="name" value="caseNumber"/>
+            <column name="order" value="0"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getLiveCaseFilePath">
+        <insert tableName="query">
+            <column name="name" value="getLiveCaseFilePath"/>
+            <column name="case_type" value="LIVE"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getLiveCaseFilePath')"/>
+            <column name="name" value="caseId"/>
+            <column name="order" value="0"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getLiveCaseFilePath')"/>
+            <column name="name" value="docId"/>
+            <column name="order" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="getArchivedCaseFilePath">
+        <insert tableName="query">
+            <column name="name" value="getArchivedCaseFilePath"/>
+            <column name="case_type" value="ARCHIVED"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getArchivedCaseFilePath')"/>
+            <column name="name" value="caseId"/>
+            <column name="order" value="0"/>
+        </insert>
+        <insert tableName="query_arguments">
+            <column name="query_id" valueComputed="(SELECT id FROM query WHERE name='getArchivedCaseFilePath')"/>
+            <column name="name" value="docId"/>
+            <column name="order" value="1"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

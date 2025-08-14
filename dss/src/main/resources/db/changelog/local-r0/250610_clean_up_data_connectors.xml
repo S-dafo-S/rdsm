@@ -1,0 +1,86 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-1">
+        <dropForeignKeyConstraint baseTableName="aliyun_data_connector" constraintName="aliyun_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-2">
+        <dropForeignKeyConstraint baseTableName="aws_data_connector" constraintName="aws_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-3">
+        <dropForeignKeyConstraint baseTableName="data_connector_child"
+                                  constraintName="data_connector_child_data_connector_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-4">
+        <dropForeignKeyConstraint baseTableName="data_connector_child"
+                                  constraintName="data_connector_child_parent_data_connector_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-5">
+        <dropForeignKeyConstraint baseTableName="flex_ftp_data_connector"
+                                  constraintName="flex_ftp_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-6">
+        <dropForeignKeyConstraint baseTableName="ftp_data_connector" constraintName="ftp_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-7">
+        <dropForeignKeyConstraint baseTableName="h3c_onestore_data_connector"
+                                  constraintName="h3c_onestore_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-8">
+        <dropForeignKeyConstraint baseTableName="http_data_connector" constraintName="http_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-9">
+        <dropForeignKeyConstraint baseTableName="moss_data_connector" constraintName="moss_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-10">
+        <dropForeignKeyConstraint baseTableName="var_db_data_connector" constraintName="var_db_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-11">
+        <dropForeignKeyConstraint baseTableName="var_ftp_data_connector" constraintName="var_ftp_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-12">
+        <dropForeignKeyConstraint baseTableName="web_dav_data_connector" constraintName="web_dav_data_connector_pk_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-13">
+        <dropTable tableName="aliyun_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-14">
+        <dropTable tableName="aws_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-15">
+        <dropTable tableName="data_connector_child"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-16">
+        <dropTable tableName="flex_ftp_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-17">
+        <dropTable tableName="ftp_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-18">
+        <dropTable tableName="h3c_onestore_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-19">
+        <dropTable tableName="http_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-20">
+        <dropTable tableName="moss_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-21">
+        <dropTable tableName="var_db_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-22">
+        <dropTable tableName="var_ftp_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-23">
+        <dropTable tableName="web_dav_data_connector"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749590556233-24">
+        <delete tableName="dbms_type">
+            <where>type in ('ARTERYBASE5', 'ARTERYBASE7', 'DB2', 'HIGHGO',
+                'KINGBASE82', 'KINGBASE86', 'MARIADB', 'OCEANBASE', 'ORACLE',
+                'OSCAR', 'SQLSERVER', 'SYBASE')
+            </where>
+        </delete>
+    </changeSet>
+</databaseChangeLog>

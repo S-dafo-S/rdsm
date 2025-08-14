@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1670190113157-1">
+        <createTable tableName="query_integration_types">
+            <column name="query_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(64)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1670190113157-2">
+        <addForeignKeyConstraint baseColumnNames="query_id" baseTableName="query_integration_types"
+                                 constraintName="query_integration_types_query_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="query"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1670190113157-3">
+        <sql>
+            INSERT INTO query_integration_types(query_id, type)
+            SELECT id, 'SQL'
+            FROM query WHERE program_jar_name IS NOT NULL;
+        </sql>
+        <sql>
+            INSERT INTO query_integration_types(query_id, type)
+            SELECT id, 'JAVA'
+            FROM query WHERE program_jar_name IS NOT NULL;
+        </sql>
+        <comment>Set both integration type allowed for existing query.</comment>
+    </changeSet>
+</databaseChangeLog>

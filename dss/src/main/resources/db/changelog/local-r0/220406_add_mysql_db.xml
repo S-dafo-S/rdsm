@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="makhmetov@soylent.io (generated)" id="1649233539835-2">
+        <insert tableName="dbms_type">
+            <column name="type" value="MYSQL"/>
+            <column name="driver_class" value="com.mysql.cj.jdbc.Driver"/>
+            <column name="jdbc_url_format" value="jdbc:mysql://${DOLLAR_SIGN}{hostname}:${DOLLAR_SIGN}{port}/${DOLLAR_SIGN}{dbName}"/>
+            <column name="default_port" value="3306"/>
+            <column name="display_name" value="MySQL"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,96 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-1">
+        <createTable tableName="query">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="queryPK"/>
+            </column>
+            <column name="case_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-2">
+        <createTable tableName="query_arguments">
+            <column name="query_id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order" type="INTEGER">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-3">
+        <createTable tableName="query_implementation">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="query_implementationPK"/>
+            </column>
+            <column name="creation_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column defaultValueBoolean="true" name="active" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="data_connector" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="query" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-4">
+        <createTable tableName="sql_query_implementation">
+            <column name="code" type="VARCHAR"/>
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="sql_query_implementationPK"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-5">
+        <addUniqueConstraint columnNames="name, query" constraintName="query_impl_name_uniq"
+                             tableName="query_implementation"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-6">
+        <addUniqueConstraint columnNames="name" constraintName="query_name_uniq" tableName="query"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-7">
+        <addForeignKeyConstraint baseColumnNames="query_id" baseTableName="query_arguments"
+                                 constraintName="query_arguments_query_fk" deferrable="false" initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="query" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-8">
+        <addForeignKeyConstraint baseColumnNames="data_connector" baseTableName="query_implementation"
+                                 constraintName="query_implementation_dc_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="data_connector" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-9">
+        <addForeignKeyConstraint baseColumnNames="query" baseTableName="query_implementation"
+                                 constraintName="query_implementation_query_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="query"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631738248416-10">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="sql_query_implementation"
+                                 constraintName="sql_query_implementation_pk_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="query_implementation" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

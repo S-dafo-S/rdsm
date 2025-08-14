@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io" id="cleanUpArguments">
+        <delete tableName="query_arguments">
+            <where>query_id in (SELECT id FROM query WHERE name IN
+                ('getAllLiveCases', 'getAllArchivedCases',
+                'getLiveCasesByType', 'getArchivedCasesByType',
+                'getLiveCaseByCaseNumber', 'getArchivedCaseByCaseNumber',
+                'getLiveCasesByPartialCaseNumber', 'getArchivedCasesByPartialCaseNumber',
+                'getLiveCaseByCaseId', 'getArchivedCaseByCaseId',
+                'getLiveCasesByFilingDate', 'getArchivedCasesByFilingDate',
+                'getLiveCaseDocumentDirectoryByCaseID', 'getArchivedCaseDocumentDirectoryByCaseID',
+                'getLiveCaseDocumentDirectoryByCaseNumber', 'getArchivedCaseDocumentDirectoryByCaseNumber',
+                'getLiveCaseFilePath', 'getArchivedCaseFilePath'))
+            </where>
+        </delete>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io" id="cleanUpQueries">
+        <delete tableName="query">
+            <where>id in (SELECT id FROM query WHERE name IN
+                ('getAllLiveCases', 'getAllArchivedCases',
+                'getLiveCasesByType', 'getArchivedCasesByType',
+                'getLiveCaseByCaseNumber', 'getArchivedCaseByCaseNumber',
+                'getLiveCasesByPartialCaseNumber', 'getArchivedCasesByPartialCaseNumber',
+                'getLiveCaseByCaseId', 'getArchivedCaseByCaseId',
+                'getLiveCasesByFilingDate', 'getArchivedCasesByFilingDate',
+                'getLiveCaseDocumentDirectoryByCaseID', 'getArchivedCaseDocumentDirectoryByCaseID',
+                'getLiveCaseDocumentDirectoryByCaseNumber', 'getArchivedCaseDocumentDirectoryByCaseNumber',
+                'getLiveCaseFilePath', 'getArchivedCaseFilePath'))
+            </where>
+        </delete>
+    </changeSet>
+</databaseChangeLog>

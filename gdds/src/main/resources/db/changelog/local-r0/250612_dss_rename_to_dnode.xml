@@ -1,0 +1,61 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-1">
+        <dropForeignKeyConstraint baseTableName="court_host" constraintName="court_host_dss_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-2">
+        <dropForeignKeyConstraint baseTableName="dnode_access_log" constraintName="dnode_access_log_dnode_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-3">
+        <dropForeignKeyConstraint baseTableName="query_implementation" constraintName="query_impl_dnode_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-4">
+        <renameTable oldTableName="dss" newTableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-5">
+        <dropPrimaryKey tableName="dnode" constraintName="dssPK"/>
+        <addPrimaryKey columnNames="id" constraintName="dnodePK" tableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-6">
+        <dropUniqueConstraint constraintName="dss_account_id_uniq" tableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-7">
+        <addUniqueConstraint columnNames="account_id" constraintName="dnode_account_id_uniq" tableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-8">
+        <dropUniqueConstraint constraintName="dss_name_uniq" tableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-9">
+        <addUniqueConstraint columnNames="name" constraintName="dnode_name_uniq" tableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749670417372-10">
+        <renameColumn oldColumnName="dss_url" newColumnName="dnode_url" tableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749670417372-11">
+        <renameColumn oldColumnName="gdds_token" newColumnName="qnode_token" tableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-12">
+        <dropForeignKeyConstraint baseTableName="dnode" constraintName="dss_deploy_court_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-13">
+        <addForeignKeyConstraint baseColumnNames="deploy_court" baseTableName="dnode"
+                                 constraintName="dnode_deploy_court_fk" deferrable="false" initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="court" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-14">
+        <addForeignKeyConstraint baseColumnNames="dss" baseTableName="court_host" constraintName="court_host_dss_fk"
+                                 referencedColumnNames="id" referencedTableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-15">
+        <addForeignKeyConstraint baseColumnNames="dnode" baseTableName="dnode_access_log"
+                                 constraintName="dnode_access_log_dnode_fk" referencedColumnNames="id"
+                                 referencedTableName="dnode"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749681188739-16">
+        <addForeignKeyConstraint baseColumnNames="dnode" baseTableName="query_implementation"
+                                 constraintName="query_impl_dnode_fk" referencedColumnNames="id"
+                                 referencedTableName="dnode"/>
+    </changeSet>
+</databaseChangeLog>

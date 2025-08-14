@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="spomelov@soylent.io" id="tempFilesDataConnectorMapping">
+        <insert tableName="data_connector">
+            <column name="name" value="LocalFS"/>
+            <column name="live" valueBoolean="false"/>
+            <column name="archive" valueBoolean="false"/>
+            <column name="archived" valueBoolean="false"/>
+            <column name="description" value="A data connector to store files on local file system."/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+
+        <insert tableName="local_file_system_data_connector">
+            <column name="id" valueComputed="(SELECT id FROM data_connector WHERE name='LocalFS')"/>
+        </insert>
+
+        <insert tableName="file_access_path">
+            <column name="data_connector" valueComputed="(SELECT id FROM data_connector WHERE name='LocalFS')"/>
+            <column name="logical_path" value="temp"/>
+            <column name="physical_path" value="tmp/dss"/>
+            <column name="status" value="FULLY_OPERABLE"/>
+            <column name="description"
+                    value="A predefined way and path to store temporary files on local file system."/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

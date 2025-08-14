@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="makhmetov@soylent.io (generated)" id="1643018265219-2">
+        <createTable tableName="application_registry">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="application_registryPK"/>
+            </column>
+            <column name="app_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="app_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session_lease_time" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1643018265219-3">
+        <createTable tableName="ip_address">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ip_addressPK"/>
+            </column>
+            <column name="address" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="application_registry_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1643018265219-6">
+        <addUniqueConstraint columnNames="app_id" constraintName="application_registry_app_id_unic" tableName="application_registry"/>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1643018265219-12">
+        <addForeignKeyConstraint baseColumnNames="application_registry_id" baseTableName="ip_address" constraintName="ip_address_application_registry_fk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="application_registry" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

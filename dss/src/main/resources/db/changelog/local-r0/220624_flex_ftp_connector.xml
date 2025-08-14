@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="makhmetov@soylent.io (generated)" id="1656060735832-2">
+        <createTable tableName="flex_ftp_data_connector">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="flex_ftp_data_connectorPK"/>
+            </column>
+            <column name="port" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="VARCHAR(255)"/>
+            <column name="user_password" type="BYTEA"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1656060735832-9">
+        <addForeignKeyConstraint baseColumnNames="id" baseTableName="flex_ftp_data_connector"
+                                 constraintName="flex_ftp_data_connector_pk_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="data_connector" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

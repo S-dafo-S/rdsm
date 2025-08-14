@@ -1,0 +1,48 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="spomelov@soylent.io (generated)" id="1633431034694-1">
+        <createTable tableName="file_access_program">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="file_access_programPK"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="update_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="spomelov@soylent.io (generated)" id="1633431034694-2">
+        <addUniqueConstraint columnNames="name" constraintName="file_access_program_name_uniq"
+                             tableName="file_access_program"/>
+    </changeSet>
+
+    <changeSet author="spomelov@soylent.io" id="create-data-access-programs">
+        <insert tableName="file_access_program">
+            <column name="name" value="WebDav"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="file_access_program">
+            <column name="name" value="FTP"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+        <insert tableName="file_access_program">
+            <column name="name" value="LocalFileSystem"/>
+            <column name="status" value="INUSE"/>
+            <column name="creation_date" valueComputed="now()"/>
+            <column name="update_date" valueComputed="now()"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

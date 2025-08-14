@@ -1,0 +1,54 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-1">
+        <createTable tableName="dss">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dssPK"/>
+            </column>
+            <column name="account_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-2">
+        <addColumn tableName="court_host">
+            <column name="dss" type="int8">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-3">
+        <addUniqueConstraint columnNames="court, dss" constraintName="court_host_dss_uniq" tableName="court_host"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-4">
+        <addUniqueConstraint columnNames="name" constraintName="dss_name_uniq" tableName="dss"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-5">
+        <addForeignKeyConstraint baseColumnNames="dss" baseTableName="court_host" constraintName="court_host_dss_fk"
+                                 deferrable="false" initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="dss" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-6">
+        <dropForeignKeyConstraint baseTableName="court_host" constraintName="court_host_dds_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-7">
+        <dropUniqueConstraint constraintName="court_host_dds_uniq" tableName="court_host"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-8">
+        <dropUniqueConstraint constraintName="dds_name_uniq" tableName="dds"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-9">
+        <dropTable tableName="dds"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631039382215-10">
+        <dropColumn columnName="dds" tableName="court_host"/>
+    </changeSet>
+</databaseChangeLog>

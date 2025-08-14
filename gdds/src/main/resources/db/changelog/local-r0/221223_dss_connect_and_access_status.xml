@@ -1,0 +1,48 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet author="makhmetov@soylent.io (generated)" id="1671776900305-1">
+        <createTable tableName="dss_access_log">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dss_access_logPK"/>
+            </column>
+            <column name="dss" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="success" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="VARCHAR(1024)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1671776900305-2">
+        <addForeignKeyConstraint baseColumnNames="dss" baseTableName="dss_access_log"
+                                 constraintName="dss_access_log_dss_fk" deferrable="false" initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="dss" validate="true"/>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1671776900305-3">
+        <addColumn tableName="dss">
+            <column name="access_all" type="int8"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1671776900305-4">
+        <addColumn tableName="dss">
+            <column name="access_fail" type="int8"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1671776900305-5">
+        <addColumn tableName="dss">
+            <column name="connect_status" type="boolean"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

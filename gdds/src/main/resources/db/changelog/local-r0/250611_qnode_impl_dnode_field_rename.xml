@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1749673902410-1">
+        <dropForeignKeyConstraint baseTableName="query_implementation" constraintName="query_impl_dss_fk"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749673902410-2">
+        <renameColumn oldColumnName="dss" newColumnName="dnode" tableName="query_implementation"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1749673902410-3">
+        <addForeignKeyConstraint baseColumnNames="dnode" baseTableName="query_implementation"
+                                 constraintName="query_impl_dnode_fk" deferrable="false" initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="dss" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

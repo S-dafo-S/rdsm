@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet author="makhmetov@soylent.io (generated)" id="1673329810461-1">
+        <sql>
+            UPDATE dbms_type
+            SET type='ARTERYBASE7', display_name='ArteryBase 7'
+            WHERE type = 'ARTERYBASE';
+        </sql>
+    </changeSet>
+    <changeSet author="makhmetov@soylent.io (generated)" id="1673329810461-2">
+        <insert tableName="dbms_type">
+            <column name="type" value="ARTERYBASE5"/>
+            <column name="driver_cp" value="arterybase-3.6.2.jar"/>
+            <column name="driver_class" value="com.thunisoft.ArteryBase.Driver"/>
+            <column name="jdbc_url_format" value="jdbc:ArteryBase://${DOLLAR_SIGN}{hostname}:${DOLLAR_SIGN}{port}/${DOLLAR_SIGN}{dbName}?useUnicode=true&amp;characterEncoding=utf-8&amp;clientEncoding=utf-8"/>
+            <column name="default_port" value="5432"/>
+            <column name="display_name" value="ArteryBase 5"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,88 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1631012542021-1">
+        <createTable tableName="court">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="courtPK"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="city" type="VARCHAR(255)"/>
+            <column name="contact_email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact_phone" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="level" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="region" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631012542021-2">
+        <createTable tableName="court_host">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="court_hostPK"/>
+            </column>
+            <column name="creation_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="local_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="local_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="update_date" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="court" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dds" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631012542021-3">
+        <createTable tableName="dds">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ddsPK"/>
+            </column>
+            <column name="account_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631012542021-4">
+        <addUniqueConstraint columnNames="court, dds" constraintName="court_host_dds_uniq" tableName="court_host"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631012542021-5">
+        <addUniqueConstraint columnNames="name" constraintName="court_name_uniq" tableName="court"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631012542021-6">
+        <addUniqueConstraint columnNames="name" constraintName="dds_name_uniq" tableName="dds"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631012542021-7">
+        <addForeignKeyConstraint baseColumnNames="court" baseTableName="court_host" constraintName="court_host_court_fk"
+                                 deferrable="false" initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="court" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1631012542021-8">
+        <addForeignKeyConstraint baseColumnNames="dds" baseTableName="court_host" constraintName="court_host_dds_fk"
+                                 deferrable="false" initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="dds" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

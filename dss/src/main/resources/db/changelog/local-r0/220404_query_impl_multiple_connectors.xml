@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1649196180484-1">
+        <createTable tableName="query_implementation_connector">
+            <column name="impl" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_connector" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1649196180484-2">
+        <addForeignKeyConstraint baseColumnNames="data_connector" baseTableName="query_implementation_connector"
+                                 constraintName="query_implementation_connector_dc_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="data_connector" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1649196180484-3">
+        <addForeignKeyConstraint baseColumnNames="impl" baseTableName="query_implementation_connector"
+                                 constraintName="query_implementation_connector_impl_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id"
+                                 referencedTableName="query_implementation" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1649196180484-4">
+        <sql>
+            INSERT INTO query_implementation_connector(impl, data_connector)
+            SELECT id, data_connector FROM query_implementation;
+        </sql>
+        <comment>Migrate from many-to-one implementation-connector relation to many-to-many.</comment>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1649292852587-5">
+        <dropColumn columnName="data_connector" tableName="query_implementation"/>
+    </changeSet>
+</databaseChangeLog>

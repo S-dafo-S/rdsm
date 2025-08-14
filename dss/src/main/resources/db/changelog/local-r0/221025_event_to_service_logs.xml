@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+    <changeSet id="rename_eventlog_table" author="ksvintsov@soylent.io">
+        <renameTable oldTableName="event_log" newTableName="service_log" />
+    </changeSet>
+    <changeSet id="update_eventlog_property_names" author="ksvintsov@soylent.io">
+        <update tableName="app_properties" >
+            <column name="key" value="service_log_level" />
+            <where>key='event_log_level'</where>
+        </update>
+        <update tableName="app_properties" >
+            <column name="key" value="service_log_retention" />
+            <where>key='event_log_retention'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,50 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="emamontova@soylent.io (generated)" id="1632420984692-1">
+        <createTable tableName="court_data_store">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="court_data_storePK"/>
+            </column>
+            <column name="data_store" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="is_hosted" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="court_host" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_connector" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1632420984692-2">
+        <addUniqueConstraint columnNames="court_host, data_store" constraintName="court_data_store_uniq"
+                             tableName="court_data_store"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1632420984692-3">
+        <addUniqueConstraint columnNames="local_id" constraintName="court_host_local_id_uniq"
+                             tableName="court_host"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1632420984692-4">
+        <addForeignKeyConstraint baseColumnNames="court_host" baseTableName="court_data_store"
+                                 constraintName="court_data_store_court_host_fk" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="court_host"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1632420984692-5">
+        <addForeignKeyConstraint baseColumnNames="data_connector" baseTableName="court_data_store"
+                                 constraintName="court_data_store_dc_fk" deferrable="false" initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="data_connector" validate="true"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1632420984692-6">
+        <dropColumn columnName="local+court_id" tableName="court_host"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1632420984692-7">
+        <dropColumn columnName="local_court_name" tableName="court_host"/>
+    </changeSet>
+    <changeSet author="emamontova@soylent.io (generated)" id="1632420984692-8">
+        <modifyDataType tableName="court_host" columnName="local_id" newDataType="BIGINT"/>
+    </changeSet>
+</databaseChangeLog>
