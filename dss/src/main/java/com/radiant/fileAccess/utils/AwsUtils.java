@@ -73,7 +73,6 @@ public class AwsUtils {
                if (StringUtils.isEmpty(connectorBucketName)) {
                   throw new InsufficientUserPermissionsException("Access denied to get list of buckets!");
                }
-
                try {
                   client.getObject(testBucketName, UUID.randomUUID().toString());
                   isBucketExists = true;
